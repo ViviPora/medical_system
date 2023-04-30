@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface PatientRepository extends CrudRepository<PatientEntity, Integer> {
     PatientEntity findById(int id);
     PatientEntity findByLastName(String lastname);
+    PatientEntity findByLastNameAndFirstName(String lastName, String firstName);
 
 
 }

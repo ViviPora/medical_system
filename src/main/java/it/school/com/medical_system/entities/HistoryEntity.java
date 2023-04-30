@@ -3,6 +3,7 @@ package it.school.com.medical_system.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,4 +18,6 @@ public class HistoryEntity {
     private int id;
     @Column(name = "medical_history")
     private String medicalHistory;
+    @ManyToMany (mappedBy = "historyEntity", fetch = FetchType.LAZY)
+    private List<PatientEntity> patientEntities;
 }

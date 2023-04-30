@@ -7,10 +7,7 @@ import it.school.com.medical_system.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -40,6 +37,8 @@ public class AdminResource {
     private PersonService personService;
     @Autowired
     private AddressService addressService;
+    @Autowired
+    private HistoryPatientService historyPatientService;
 
     @PostMapping("/admin")
     public ResponseEntity<AdminEntity> create(@RequestBody AdminEntity admin) {
@@ -115,4 +114,10 @@ public class AdminResource {
         AddressEntity addressEntity = this.addressService.add(addressDTO);
         return new ResponseEntity<>(addressDTO.from(addressEntity), HttpStatus.CREATED);
     }
+    @PostMapping("/histoypatient")
+    public ResponseEntity<HistoryPatientDTO> create(@RequestBody HistoryPatientDTO historyPatientDTO){
+        this.historyPatientService.addHistory(historyPatientDTO);
+        return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
+    }
+
 }
