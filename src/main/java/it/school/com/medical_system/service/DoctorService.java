@@ -29,20 +29,17 @@ public class DoctorService {
         address.setAddress(doctorDTO.getAddress());
         AddressEntity addressEntity = addressRepository.save(address);
 
-        PersonEntity person = new PersonEntity();
-        person.setFirstName(doctorDTO.getFirstName());
-        person.setLastName(doctorDTO.getLastName());
-        person.setBirthDate(doctorDTO.getBirtDate());
-        person.setEmail(doctorDTO.getEmail());
-        person.setPhone(doctorDTO.getPhone());
-        person.setAddress(addressEntity);
-        person.setGender(doctorDTO.getGender());
-
-     //   PersonEntity personEntity = personRepository.save(person);
         DoctorEntity doctor = new DoctorEntity();
+        doctor.setFirstName(doctorDTO.getFirstName());
+        doctor.setLastName(doctorDTO.getLastName());
+        doctor.setBirthDate(doctorDTO.getBirtDate());
+        doctor.setEmail(doctorDTO.getEmail());
+        doctor.setPhone(doctorDTO.getPhone());
+        doctor.setAddress(addressEntity);
+        doctor.setGender(doctorDTO.getGender());
         doctor.setExperience(doctorDTO.getExperience());
         doctor.setDegreeNumber(doctorDTO.getDegreeNumber());
-      //  doctor.setPersonEntity(personEntity);
+
         DoctorEntity doctorEntity = doctorRepository.save(doctor);
         return doctorEntity;
     }

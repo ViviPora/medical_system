@@ -36,11 +36,19 @@ public class AdminResource {
     private PrescriptionService prescriptionService;
     @Autowired
     private AppointmentService appointmentService;
+    @Autowired
+    private PersonService personService;
 
     @PostMapping("/admin")
     public ResponseEntity<AdminEntity> create(@RequestBody AdminEntity admin) {
         AdminEntity adminEntity = this.adminService.add(admin);
         return new ResponseEntity<>(adminEntity, HttpStatus.CREATED);
+
+    }
+    @PostMapping("/person")
+    public ResponseEntity<PersonEntity> create(@RequestBody PersonEntity person) {
+        PersonEntity personEntity = this.personService.add(person);
+        return new ResponseEntity<>(personEntity, HttpStatus.CREATED);
 
     }
 
