@@ -21,7 +21,7 @@ public class PrescriptionService {
     MedicationRepository medicationRepository;
     @Autowired
     PatientRepository patientRepository;
-
+//ToDO - trebuie sa introduci in PatientDTO nume, prenume -acum e cu ID si trebuie refacut si service
     public PrescriptionEntity add(PrescriptionDTO prescriptionDTO) {
         PrescriptionEntity prescriptionEntity = new PrescriptionEntity();
         PrescriptionPK prescriptionPK = new PrescriptionPK(prescriptionDTO.getIdPatient(), prescriptionDTO.getIdMedication());

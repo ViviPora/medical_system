@@ -22,7 +22,7 @@ public class AppointmentService {
     PersonRepository personRepository;
     @Autowired
     RoomRepository roomRepository;
-
+//todo findbyLastNameAndFirstName -> unique?
     public AppointmentEntity add(AppointmentDTO appointmentDTO) {
         AppointmentEntity appointmentEntity = new AppointmentEntity();
         appointmentEntity.setDoctor(doctorRepository.findByLastName(appointmentDTO.getDoctorName()));
