@@ -46,7 +46,7 @@ public class AdminResource {
 
     }
     @PostMapping("/person")
-    public ResponseEntity<PersonEntity> create(@RequestBody PersonEntity person) {
+    public ResponseEntity<PersonEntity> create(@RequestBody PersonDTO person) {
         PersonEntity personEntity = this.personService.add(person);
         return new ResponseEntity<>(personEntity, HttpStatus.CREATED);
 

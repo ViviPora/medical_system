@@ -1,5 +1,6 @@
 package it.school.com.medical_system.service;
 
+import it.school.com.medical_system.dtos.PersonDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.PersonEntity;
 import it.school.com.medical_system.repositories.AddressRepository;
@@ -16,23 +17,23 @@ public class PersonService {
     AddressRepository addressRepository;
 
     @Transactional
-    public PersonEntity add(PersonEntity person) {
+    public PersonEntity add(PersonDTO person) {
         AddressEntity address = new AddressEntity();
-        address.setCity(person.getAddress().getCity());
-        address.setCountry(person.getAddress().getCountry());
-        address.setAddress(person.getAddress().getAddress());
-        address.setStreet(person.getAddress().getStreet());
+        address.setCity(person.getCity());
+        address.setCountry(person.getCountry());
+        address.setAddress(person.getAddress());
+        address.setStreet(person.getStreet());
 
         AddressEntity addressEntity = addressRepository.save(address);
 
-        PersonEntity personEntity = null;
+        PersonEntity personEntity = new PersonEntity();
         personEntity.setFirstName(person.getFirstName());
         personEntity.setLastName(person.getLastName());
         personEntity.setEmail(person.getEmail());
         personEntity.setGender(person.getGender());
         personEntity.setPhone(person.getPhone());
         personEntity.setAddress(addressEntity);
-        personEntity.setBirthDate(person.getBirthDate());
+        personEntity.setBirthDate(person.getBirtDate());
 
         personRepository.save(personEntity);
 
