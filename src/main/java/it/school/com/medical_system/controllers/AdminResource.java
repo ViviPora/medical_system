@@ -38,6 +38,8 @@ public class AdminResource {
     private AppointmentService appointmentService;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private AddressService addressService;
 
     @PostMapping("/admin")
     public ResponseEntity<AdminEntity> create(@RequestBody AdminEntity admin) {
@@ -106,5 +108,11 @@ public class AdminResource {
     public ResponseEntity<AppointmentDTO> create(@RequestBody AppointmentDTO appointmentDTO){
         AppointmentEntity appointmentEntity = this.appointmentService.add(appointmentDTO);
         return new ResponseEntity<>(appointmentDTO.from(appointmentEntity), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/address")
+    public ResponseEntity<AddressDTO> create(@RequestBody AddressDTO addressDTO){
+        AddressEntity addressEntity = this.addressService.add(addressDTO);
+        return new ResponseEntity<>(addressDTO.from(addressEntity), HttpStatus.CREATED);
     }
 }
