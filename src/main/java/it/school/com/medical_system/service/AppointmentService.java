@@ -33,5 +33,8 @@ public class AppointmentService {
         appointmentEntity.setEndAppointment(appointmentDTO.getAppointmentEnd());
         return appointmentRepository.save(appointmentEntity);
     }
+        public Iterable<AppointmentEntity> findAll(){
+            return this.appointmentRepository.findAll();
+        }
 
 }

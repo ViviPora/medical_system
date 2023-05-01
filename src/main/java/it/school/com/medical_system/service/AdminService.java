@@ -21,4 +21,8 @@ public class AdminService {
         adminRepository.save(admin);
         return admin;
     }
+
+        public Iterable<AdminEntity> findAll(){
+            return this.adminRepository.findAll();
+        }
 }

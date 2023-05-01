@@ -18,4 +18,7 @@ public class RoomService {
 
         return roomRepository.save(roomEntity);
     }
+       public Iterable<RoomEntity> findAll(){
+                return this.roomRepository.findAll();
+            }
 }

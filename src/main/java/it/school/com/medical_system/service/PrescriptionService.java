@@ -32,6 +32,8 @@ public class PrescriptionService {
         prescriptionEntity.setDoctorId(doctorEntity);
         System.out.println(prescriptionEntity);
         return prescriptionRepository.save(prescriptionEntity);
-
     }
+       public Iterable<PrescriptionEntity> findAll(){
+                return this.prescriptionRepository.findAll();
+            }
 }

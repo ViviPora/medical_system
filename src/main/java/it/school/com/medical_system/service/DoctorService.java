@@ -44,4 +44,8 @@ public class DoctorService {
         return doctorEntity;
     }
 
+    public Iterable<DoctorEntity> findAll(){
+        return this.doctorRepository.findAll();
+    }
+
 }

@@ -27,4 +27,7 @@ public class OnCallService {
         onCallEntity.setEndOnCall(onCallDTO.getEndOnCall());
         return onCallRepository.save(onCallEntity);
     }
+       public Iterable<OnCallEntity> findAll(){
+                return this.onCallRepository.findAll();
+            }
 }

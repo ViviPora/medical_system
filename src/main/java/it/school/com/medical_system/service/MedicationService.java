@@ -18,4 +18,7 @@ public class MedicationService {
         medicationEntity.setDescription(medicationDTO.getDescription());
         return medicationRepository.save(medicationEntity);
     }
+       public Iterable<MedicationEntity> findAll(){
+                return this.medicationRepository.findAll();
+            }
 }

@@ -17,7 +17,7 @@ public class PatientProceduresDTO {
     private String doctorLastName;
     private String description;
 
-    public PatientProceduresDTO from(PatientProceduresEntity patientProceduresEntity){
+    public static PatientProceduresDTO from(PatientProceduresEntity patientProceduresEntity){
         return PatientProceduresDTO.builder()
                 .patientFirstName(patientProceduresEntity.getPatient().getFirstName())
                 .patientLastName(patientProceduresEntity.getPatient().getLastName())

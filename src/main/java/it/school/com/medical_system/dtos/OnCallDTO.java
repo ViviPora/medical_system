@@ -19,7 +19,7 @@ public class OnCallDTO {
     private LocalDateTime starOnCall;
     private LocalDateTime endOnCall;
 
-    public OnCallDTO from(OnCallEntity onCallEntity){
+    public static OnCallDTO from(OnCallEntity onCallEntity){
         return OnCallDTO.builder()
                 .id(onCallEntity.getId())
                 .doctorFirstName(onCallEntity.getDoctor().getFirstName())

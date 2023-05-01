@@ -41,7 +41,8 @@ public class PatientProceduresService {
 
         patientProceduresEntity.setDescription(patientProceduresDTO.getDescription());
         return patientProceduresRepository.save(patientProceduresEntity);
-
-
     }
+       public Iterable<PatientProceduresEntity> findAll(){
+                return this.patientProceduresRepository.findAll();
+            }
 }

@@ -34,11 +34,12 @@ public class PersonService {
         personEntity.setPhone(person.getPhone());
         personEntity.setAddress(addressEntity);
         personEntity.setBirthDate(person.getBirtDate());
-
         personRepository.save(personEntity);
-
         return personEntity;
     }
+       public Iterable<PersonEntity> findAll(){
+                return this.personRepository.findAll();
+            }
 
 
 }

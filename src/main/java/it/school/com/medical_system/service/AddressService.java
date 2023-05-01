@@ -21,4 +21,7 @@ public class AddressService {
         return addressRepository.save(addressEntity);
 
     }
+        public Iterable<AddressEntity> findAll(){
+            return this.addressRepository.findAll();
+        }
 }

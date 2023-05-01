@@ -34,4 +34,8 @@ public class PatientService {
         PatientEntity patientEntity = patientRepository.save(patient);
         return patientEntity;
     }
+
+     public Iterable<PatientEntity> findAll(){
+            return this.patientRepository.findAll();
+        }
 }

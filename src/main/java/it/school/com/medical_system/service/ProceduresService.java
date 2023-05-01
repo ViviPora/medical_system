@@ -17,4 +17,7 @@ public class ProceduresService {
         proceduresEntity.setName(proceduresDTO.getName());
         return proceduresRepository.save(proceduresEntity);
     }
+       public Iterable<ProceduresEntity> findAll(){
+                return this.proceduresRepository.findAll();
+            }
 }

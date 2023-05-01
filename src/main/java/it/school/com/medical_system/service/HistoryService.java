@@ -18,4 +18,9 @@ public class HistoryService {
         return historyRepository.save(historyEntity);
     }
 
+    //TODO ??? E bine?
+    public Iterable<HistoryEntity> findAll(){
+        return this.historyRepository.findAll();
+    }
+
 }

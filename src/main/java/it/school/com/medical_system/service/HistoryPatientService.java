@@ -29,4 +29,8 @@ public class HistoryPatientService {
 
         historyRepository.save(history);
     }
+    //TODO nu cred ca e OK
+        public Iterable<HistoryEntity> findAll(){
+            return this.historyRepository.findAll();
+        }
 }

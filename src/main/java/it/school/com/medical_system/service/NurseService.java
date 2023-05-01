@@ -38,4 +38,7 @@ public class NurseService {
         NurseEntity nurseEntity = nurseRepository.save(nurse);
         return nurseEntity;
     }
+       public Iterable<NurseEntity> findAll(){
+                return this.nurseRepository.findAll();
+            }
 }
