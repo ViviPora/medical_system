@@ -8,5 +8,6 @@ public interface DoctorRepository extends CrudRepository<DoctorEntity, Integer> 
 
     DoctorEntity findById(int id);
     DoctorEntity findByLastName(String lastname);
+    DoctorEntity findByLastNameAndFirstName(String lastName, String firstName);
 
 }

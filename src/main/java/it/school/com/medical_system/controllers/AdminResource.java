@@ -39,6 +39,8 @@ public class AdminResource {
     private AddressService addressService;
     @Autowired
     private HistoryPatientService historyPatientService;
+    @Autowired
+    private OnCallService onCallService;
 
     @PostMapping("/admin")
     public ResponseEntity<AdminEntity> create(@RequestBody AdminEntity admin) {
@@ -118,6 +120,11 @@ public class AdminResource {
     public ResponseEntity<HistoryPatientDTO> create(@RequestBody HistoryPatientDTO historyPatientDTO){
         this.historyPatientService.addHistory(historyPatientDTO);
         return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
+    }
+    @PostMapping("/oncall")
+    public ResponseEntity<OnCallDTO> create(@RequestBody OnCallDTO onCallDTO){
+        OnCallEntity onCallEntity = this.onCallService.add(onCallDTO);
+        return new ResponseEntity<>(onCallDTO.from(onCallEntity), HttpStatus.CREATED);
     }
 
 }

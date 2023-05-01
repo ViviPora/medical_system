@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 public interface NurseRepository extends CrudRepository<NurseEntity, Integer> {
 
     NurseEntity findByLastName(String lastname);
+    NurseEntity findByLastNameAndFirstName(String lastName, String firstName);
 
 }
