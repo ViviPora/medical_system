@@ -32,5 +32,6 @@ public class PrescriptionService {
         prescriptionEntity.setDoctorId(doctorEntity);
         System.out.println(prescriptionEntity);
         return prescriptionRepository.save(prescriptionEntity);
+
     }
 }
