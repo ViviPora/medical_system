@@ -40,6 +40,8 @@ public class PersonService {
        public Iterable<PersonEntity> findAll(){
                 return this.personRepository.findAll();
             }
-
+    public void delete(int id) {
+        this.personRepository.deleteById(id);
+    }
 
 }

@@ -30,4 +30,7 @@ public class OnCallService {
        public Iterable<OnCallEntity> findAll(){
                 return this.onCallRepository.findAll();
             }
+    public void delete(int id) {
+        this.onCallRepository.deleteById(id);
+    }
 }

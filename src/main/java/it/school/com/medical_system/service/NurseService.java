@@ -41,4 +41,7 @@ public class NurseService {
        public Iterable<NurseEntity> findAll(){
                 return this.nurseRepository.findAll();
             }
+    public void delete(int id) {
+        this.nurseRepository.deleteById(id);
+    }
 }

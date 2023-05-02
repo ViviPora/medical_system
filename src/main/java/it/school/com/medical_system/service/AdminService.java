@@ -25,4 +25,10 @@ public class AdminService {
         public Iterable<AdminEntity> findAll(){
             return this.adminRepository.findAll();
         }
+    public void delete(String firstName, String lastName) {
+        this.adminRepository.deleteByFirstNameAndLastName(firstName,lastName);
+    }
+    public void delete(int id) {
+        this.adminRepository.deleteById(id);
+    }
 }

@@ -36,4 +36,7 @@ public class PrescriptionService {
        public Iterable<PrescriptionEntity> findAll(){
                 return this.prescriptionRepository.findAll();
             }
+    public void delete(int id) {
+        this.prescriptionRepository.deleteById(id);
+    }
 }

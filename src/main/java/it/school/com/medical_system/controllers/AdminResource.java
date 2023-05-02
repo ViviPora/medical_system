@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -284,5 +283,80 @@ public class AdminResource {
         RoomListDTO roomListDTO = new RoomListDTO(roomDTOList);
         return new ResponseEntity<>(roomListDTO, HttpStatus.OK);
     }
+    //DELETE - ALL
+    @DeleteMapping("doctor/{id}")
+    public ResponseEntity<Void> deleteDoctor(@PathVariable("id") int id) {
+        this.doctorService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("address/{id}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable("id") int id) {
+        this.addressService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("admin/{id}")
+    public ResponseEntity<Void> deleteAdmin(@PathVariable("id") int id) {
+        this.adminService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("appointment/{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable("id") int id) {
+        this.appointmentService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("history/{id}")
+    public ResponseEntity<Void> deleteHistory(@PathVariable("id") int id) {
+        this.historyService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("medication/{id}")
+    public ResponseEntity<Void> deleteMedication(@PathVariable("id") int id) {
+        this.medicationService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
+
+    @DeleteMapping("nurse/{id}")
+    public ResponseEntity<Void> deleteNurse(@PathVariable("id") int id) {
+        this.nurseService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("oncall/{id}")
+    public ResponseEntity<Void> deleteOnCall(@PathVariable("id") int id) {
+        this.onCallService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //todo
+//    @DeleteMapping("patientprocedures/{id}")
+//    public ResponseEntity<Void> deletePatientProcedures(@PathVariable("id") int id) {
+//        this.patientProceduresService.delete(id);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
+    @DeleteMapping("patient/{id}")
+    public ResponseEntity<Void> deletePatient(@PathVariable("id") int id) {
+        this.patientService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("person/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable("id") int id) {
+        this.personService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    //TODO - delete la prescription nu fuctioneaza PK compusa, trbuie sa dai mai mult de un ID - trebuie modificat si in service si creat metodata DeletBy in repository
+    @DeleteMapping("prescription/{id}")
+    public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id) {
+        this.prescriptionService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("procedures/{id}")
+    public ResponseEntity<Void> deleteProcedures(@PathVariable("id") int id) {
+        this.proceduresService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("room/{id}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable("id") int id) {
+        this.roomService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

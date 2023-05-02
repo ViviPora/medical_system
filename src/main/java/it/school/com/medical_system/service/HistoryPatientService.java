@@ -33,4 +33,7 @@ public class HistoryPatientService {
         public Iterable<HistoryEntity> findAll(){
             return this.historyRepository.findAll();
         }
+    public void delete(int id) {
+        this.historyRepository.deleteById(id);
+    }
 }

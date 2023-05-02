@@ -21,4 +21,7 @@ public class MedicationService {
        public Iterable<MedicationEntity> findAll(){
                 return this.medicationRepository.findAll();
             }
+    public void delete(int id) {
+        this.medicationRepository.deleteById(id);
+    }
 }

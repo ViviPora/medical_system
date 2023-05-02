@@ -3,7 +3,6 @@ package it.school.com.medical_system.service;
 import it.school.com.medical_system.dtos.PatientProceduresDTO;
 import it.school.com.medical_system.entities.PatientProceduresEntity;
 import it.school.com.medical_system.entities.PatientProceduresPK;
-import it.school.com.medical_system.entities.PrescriptionPK;
 import it.school.com.medical_system.repositories.DoctorRepository;
 import it.school.com.medical_system.repositories.PatientProceduresRepository;
 import it.school.com.medical_system.repositories.PatientRepository;
@@ -45,4 +44,7 @@ public class PatientProceduresService {
        public Iterable<PatientProceduresEntity> findAll(){
                 return this.patientProceduresRepository.findAll();
             }
+//    public void delete(int id) {
+//        this.patientProceduresRepository.deleteById(id);
+//    }
 }

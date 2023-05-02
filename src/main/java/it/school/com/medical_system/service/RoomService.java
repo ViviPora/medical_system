@@ -21,4 +21,7 @@ public class RoomService {
        public Iterable<RoomEntity> findAll(){
                 return this.roomRepository.findAll();
             }
+    public void delete(int id) {
+        this.roomRepository.deleteById(id);
+    }
 }

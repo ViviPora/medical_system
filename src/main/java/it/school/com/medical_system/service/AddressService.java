@@ -24,4 +24,9 @@ public class AddressService {
         public Iterable<AddressEntity> findAll(){
             return this.addressRepository.findAll();
         }
+
+    public void delete(int id) {
+        this.addressRepository.deleteById(id);
+    }
+
 }

@@ -38,4 +38,7 @@ public class PatientService {
      public Iterable<PatientEntity> findAll(){
             return this.patientRepository.findAll();
         }
+    public void delete(int id) {
+        this.patientRepository.deleteById(id);
+    }
 }

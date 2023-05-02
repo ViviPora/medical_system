@@ -20,4 +20,7 @@ public class ProceduresService {
        public Iterable<ProceduresEntity> findAll(){
                 return this.proceduresRepository.findAll();
             }
+    public void delete(int id) {
+        this.proceduresRepository.deleteById(id);
+    }
 }

@@ -36,5 +36,9 @@ public class AppointmentService {
         public Iterable<AppointmentEntity> findAll(){
             return this.appointmentRepository.findAll();
         }
+    public void delete(int id) {
+        this.appointmentRepository.deleteById(id);
+    }
+
 
 }
