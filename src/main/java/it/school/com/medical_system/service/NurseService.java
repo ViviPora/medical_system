@@ -3,6 +3,7 @@ package it.school.com.medical_system.service;
 import it.school.com.medical_system.dtos.NurseDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.NurseEntity;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.AddressRepository;
 import it.school.com.medical_system.repositories.NurseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,4 +45,8 @@ public class NurseService {
     public void delete(int id) {
         this.nurseRepository.deleteById(id);
     }
+
+//    public NurseEntity findById(int id) throws InexistentResourceException {
+//        return this.nurseRepository.findById(id).orElseThrow(() -> new InexistentResourceException("Nurse does not exist", id));
+//    }
 }

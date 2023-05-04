@@ -2,12 +2,15 @@ package it.school.com.medical_system.controllers;
 
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.service.*;
+import org.apache.commons.collections4.MultiValuedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @RestController
@@ -123,21 +126,37 @@ public class AdminResource {
     }
 
     @PostMapping("/histoypatient")
-    public ResponseEntity<HistoryPatientDTO> create(@RequestBody HistoryPatientDTO historyPatientDTO) {
-        this.historyPatientService.addHistory(historyPatientDTO);
-        return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
+    public ResponseEntity<?> create(@RequestBody HistoryPatientDTO historyPatientDTO) {
+        try {
+            this.historyPatientService.addHistory(historyPatientDTO);
+            return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
+        }catch (InexistentResourceException e){
+
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PostMapping("/oncall")
-    public ResponseEntity<OnCallDTO> create(@RequestBody OnCallDTO onCallDTO) {
-        OnCallEntity onCallEntity = this.onCallService.add(onCallDTO);
-        return new ResponseEntity<>(onCallDTO.from(onCallEntity), HttpStatus.CREATED);
+    public ResponseEntity<OnCallDTO> create(@RequestBody OnCallDTO onCallDTO){
+        try {
+            OnCallEntity onCallEntity = this.onCallService.add(onCallDTO);
+            return new ResponseEntity<>(onCallDTO.from(onCallEntity), HttpStatus.CREATED);
+        }catch (InexistentResourceException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     @PostMapping("/patientprocedures")
     public ResponseEntity<PatientProceduresDTO> create(@RequestBody PatientProceduresDTO patientProceduresDTO) {
-        PatientProceduresEntity patientProceduresEntity = this.patientProceduresService.add(patientProceduresDTO);
-        return new ResponseEntity<>(patientProceduresDTO.from(patientProceduresEntity), HttpStatus.CREATED);
+        try {
+            PatientProceduresEntity patientProceduresEntity = this.patientProceduresService.add(patientProceduresDTO);
+            return new ResponseEntity<>(patientProceduresDTO.from(patientProceduresEntity), HttpStatus.CREATED);
+        }catch (InexistentResourceException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
     //GET - ALL

@@ -3,15 +3,19 @@ package it.school.com.medical_system.service;
 import it.school.com.medical_system.dtos.AddressDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.repositories.AddressRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class AddressService {
     @Autowired
     AddressRepository addressRepository;
 
-    public AddressEntity add(AddressDTO addressDTO){
+    @Transactional
+    public AddressEntity add(AddressDTO addressDTO) {
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setCountry(addressDTO.getCountry());
         addressEntity.setCity(addressDTO.getCity());
@@ -21,9 +25,10 @@ public class AddressService {
         return addressRepository.save(addressEntity);
 
     }
-        public Iterable<AddressEntity> findAll(){
-            return this.addressRepository.findAll();
-        }
+
+    public Iterable<AddressEntity> findAll(){
+        return this.addressRepository.findAll();
+    }
 
     public void delete(int id) {
         this.addressRepository.deleteById(id);

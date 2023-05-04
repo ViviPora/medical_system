@@ -1,14 +1,16 @@
 package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.PatientProceduresDTO;
-import it.school.com.medical_system.entities.PatientProceduresEntity;
-import it.school.com.medical_system.entities.PatientProceduresPK;
+import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.DoctorRepository;
 import it.school.com.medical_system.repositories.PatientProceduresRepository;
 import it.school.com.medical_system.repositories.PatientRepository;
 import it.school.com.medical_system.repositories.ProceduresRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PatientProceduresService {
@@ -21,29 +23,39 @@ public class PatientProceduresService {
     @Autowired
     ProceduresRepository proceduresRepository;
 
-    public PatientProceduresEntity add(PatientProceduresDTO patientProceduresDTO) {
+    public PatientProceduresEntity add(PatientProceduresDTO patientProceduresDTO) throws InexistentResourceException {
         PatientProceduresEntity patientProceduresEntity = new PatientProceduresEntity();
-        int patient = patientRepository.findByLastNameAndFirstName(patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName()).getId();
-        int doctor = doctorRepository.findByLastNameAndFirstName(patientProceduresDTO.getDoctorLastName(),
-                patientProceduresDTO.getDoctorFirstName()).getId();
-        int procedures = proceduresRepository.findByName(patientProceduresDTO.getProcedureName()).getId();
-        PatientProceduresPK patientProceduresPK = new PatientProceduresPK(patient, doctor, procedures);
-        patientProceduresEntity.setId(patientProceduresPK);
-        patientProceduresEntity.setDoctor
-                (doctorRepository.findByLastNameAndFirstName(patientProceduresDTO.getDoctorLastName(),
-                        patientProceduresDTO.getDoctorFirstName()));
-        patientProceduresEntity.setPatient
-                (patientRepository.findByLastNameAndFirstName(patientProceduresDTO.getPatientLastName(),
-                        patientProceduresDTO.getPatientFirstName()));
-        patientProceduresEntity.setProcedures
-                (proceduresRepository.findByName(patientProceduresDTO.getProcedureName()));
+        Optional<ProceduresEntity> proceduresOptional = proceduresRepository.findByName(patientProceduresDTO.getProcedureName());
+        Optional<PatientEntity> patientOptional = patientRepository.findByLastNameAndFirstName(patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName());
+        Optional<DoctorEntity> doctorOptional = doctorRepository.findByLastNameAndFirstName(patientProceduresDTO.getDoctorLastName(), patientProceduresDTO.getDoctorFirstName());
+        if (!proceduresOptional.isPresent()) {
+            throw new InexistentResourceException("This procedure does not exist!", patientProceduresDTO.getProcedureName());
+        }
+        if (!patientOptional.isPresent()) {
+            throw new InexistentResourceException("This patient does not exist!", patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName());
+        }
+        if (!doctorOptional.isPresent()) {
+            throw new InexistentResourceException("This doctor does not exist!", patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName());
+        }
+        ProceduresEntity procedures = proceduresOptional.get();
+        PatientEntity patient = patientOptional.get();
+        DoctorEntity doctor = doctorOptional.get();
 
+        int patientId = patient.getId();
+        int doctorId = doctor.getId();
+        int proceduresId = procedures.getId();
+        PatientProceduresPK patientProceduresPK = new PatientProceduresPK(patientId, doctorId, proceduresId);
+        patientProceduresEntity.setId(patientProceduresPK);
+        patientProceduresEntity.setDoctor(doctor);
+        patientProceduresEntity.setPatient(patient);
+        patientProceduresEntity.setProcedures(procedures);
         patientProceduresEntity.setDescription(patientProceduresDTO.getDescription());
         return patientProceduresRepository.save(patientProceduresEntity);
     }
-       public Iterable<PatientProceduresEntity> findAll(){
-                return this.patientProceduresRepository.findAll();
-            }
+
+    public Iterable<PatientProceduresEntity> findAll() {
+        return this.patientProceduresRepository.findAll();
+    }
 //    public void delete(int id) {
 //        this.patientProceduresRepository.deleteById(id);
 //    }
