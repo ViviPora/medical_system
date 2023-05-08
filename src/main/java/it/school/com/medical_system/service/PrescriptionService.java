@@ -24,6 +24,8 @@ public class PrescriptionService {
     PatientRepository patientRepository;
 
     //ToDO - trebuie sa introduci in PatientDTO nume, prenume -acum e cu ID si trebuie refacut si service
+    //TODO log for prescription
+    //TODO if you don t have time delete this-> DELETE prescription
     public PrescriptionEntity add(PrescriptionDTO prescriptionDTO) {
         PrescriptionEntity prescriptionEntity = new PrescriptionEntity();
         PrescriptionPK prescriptionPK = new PrescriptionPK(prescriptionDTO.getIdPatient(), prescriptionDTO.getIdMedication());
