@@ -2,11 +2,14 @@ package it.school.com.medical_system.dtos;
 
 import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.model.Gender;
+import it.school.com.medical_system.validators.NoDigits;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +24,19 @@ public class DoctorDTO {
     private Integer id;
 
     @NotEmpty
+    @NoDigits(message = "Digits in firstname")
     private String firstName;
     @NotEmpty
+    @NoDigits(message = "Digits in lastname")
     private String lastName;
     @NotEmpty
+    @PastOrPresent
     private LocalDate birtDate;
     @NotEmpty
     @Email
     String email;
     @NotEmpty
+    @Digits(integer = 10, fraction = 0)
     String phone;
     @NotEmpty
     Gender gender;
