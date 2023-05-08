@@ -4,6 +4,8 @@ import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.entities.MedicationEntity;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 public interface MedicationRepository extends CrudRepository<MedicationEntity, Integer> {
-    MedicationEntity findById(int id);
+   // Optional<MedicationEntity> findById(int id);
 }

@@ -42,11 +42,8 @@ public class NurseService {
        public Iterable<NurseEntity> findAll(){
                 return this.nurseRepository.findAll();
             }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException{
+        this.nurseRepository.findById(id).orElseThrow(() -> new InexistentResourceException("Nurse does not exist"));
         this.nurseRepository.deleteById(id);
     }
-
-//    public NurseEntity findById(int id) throws InexistentResourceException {
-//        return this.nurseRepository.findById(id).orElseThrow(() -> new InexistentResourceException("Nurse does not exist", id));
-//    }
 }

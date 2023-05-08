@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface HistoryRepository extends CrudRepository<HistoryEntity,Integer> {
     Optional <HistoryEntity> findByMedicalHistory(String code);
+  //  Optional<HistoryEntity> findById(int id);
 }

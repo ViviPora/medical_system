@@ -2,6 +2,7 @@ package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.MedicationDTO;
 import it.school.com.medical_system.entities.MedicationEntity;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.MedicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,8 @@ public class MedicationService {
        public Iterable<MedicationEntity> findAll(){
                 return this.medicationRepository.findAll();
             }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException{
+        this.medicationRepository.findById(id).orElseThrow(() -> new InexistentResourceException("This medication does not exist"));
         this.medicationRepository.deleteById(id);
     }
 }

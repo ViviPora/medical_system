@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface DoctorRepository extends CrudRepository<DoctorEntity, Integer> {
 
-    DoctorEntity findById(int id);
+    Optional<DoctorEntity> findById(int id);
     DoctorEntity findByLastName(String lastname);
     Optional <DoctorEntity> findByLastNameAndFirstName(String lastName, String firstName);
 

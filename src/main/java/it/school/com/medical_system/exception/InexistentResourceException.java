@@ -18,4 +18,7 @@ public class InexistentResourceException extends Exception {
         this.message = message;
         this.name = name;
     }
+    public InexistentResourceException(String message) {
+        this.message = message;
+    }
 }

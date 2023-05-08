@@ -21,6 +21,7 @@ public class HistoryPatientService {
 
     //todo Inexitent Resource Exception
     //todo Optional
+    //todo delete - findbyid
     @Transactional
     public void addHistory(HistoryPatientDTO historyPatientDTO) throws InexistentResourceException {
         Optional<PatientEntity> patientOptional = patientRepository.findByLastNameAndFirstName(historyPatientDTO.getLastName(), historyPatientDTO.getFirstName());

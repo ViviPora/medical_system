@@ -2,6 +2,7 @@ package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.AppointmentDTO;
 import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,8 @@ public class AppointmentService {
         public Iterable<AppointmentEntity> findAll(){
             return this.appointmentRepository.findAll();
         }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException{
+        this.appointmentRepository.findById(id).orElseThrow(()-> new InexistentResourceException("This appointment does not exist! "));
         this.appointmentRepository.deleteById(id);
     }
 

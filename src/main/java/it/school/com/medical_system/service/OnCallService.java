@@ -45,7 +45,8 @@ public class OnCallService {
        public Iterable<OnCallEntity> findAll(){
                 return this.onCallRepository.findAll();
             }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException {
+        this.onCallRepository.findById(id).orElseThrow(()-> new InexistentResourceException("Does not exist!"));
         this.onCallRepository.deleteById(id);
     }
 }

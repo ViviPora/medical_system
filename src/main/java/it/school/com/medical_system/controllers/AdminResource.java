@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -130,19 +131,18 @@ public class AdminResource {
         try {
             this.historyPatientService.addHistory(historyPatientDTO);
             return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
-        }catch (InexistentResourceException e){
+        } catch (InexistentResourceException e) {
 
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
     }
 
     @PostMapping("/oncall")
-    public ResponseEntity<OnCallDTO> create(@RequestBody OnCallDTO onCallDTO){
+    public ResponseEntity<OnCallDTO> create(@RequestBody OnCallDTO onCallDTO) {
         try {
             OnCallEntity onCallEntity = this.onCallService.add(onCallDTO);
             return new ResponseEntity<>(onCallDTO.from(onCallEntity), HttpStatus.CREATED);
-        }catch (InexistentResourceException e){
+        } catch (InexistentResourceException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -153,7 +153,7 @@ public class AdminResource {
         try {
             PatientProceduresEntity patientProceduresEntity = this.patientProceduresService.add(patientProceduresDTO);
             return new ResponseEntity<>(patientProceduresDTO.from(patientProceduresEntity), HttpStatus.CREATED);
-        }catch (InexistentResourceException e){
+        } catch (InexistentResourceException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -203,6 +203,7 @@ public class AdminResource {
         AppointmentListDTO appointmentListDTO = new AppointmentListDTO(appointmentDTOList);
         return new ResponseEntity<>(appointmentListDTO, HttpStatus.OK);
     }
+
     @GetMapping("/history")
     public ResponseEntity<HistoryListDTO> getAllHistory() {
         Iterable<HistoryEntity> history = this.historyService.findAll();
@@ -238,6 +239,7 @@ public class AdminResource {
         NurseListDTO nurseListDTO = new NurseListDTO(nurseDTOList);
         return new ResponseEntity<>(nurseListDTO, HttpStatus.OK);
     }
+
     @GetMapping("/oncall")
     public ResponseEntity<OnCallListDTO> getAllOnCall() {
         Iterable<OnCallEntity> onCalls = this.onCallService.findAll();
@@ -248,6 +250,7 @@ public class AdminResource {
         OnCallListDTO onCallListDTO = new OnCallListDTO(onCallDTOList);
         return new ResponseEntity<>(onCallListDTO, HttpStatus.OK);
     }
+
     @GetMapping("/patientprocedures")
     public ResponseEntity<PatientProceduresListDTO> getAllPatientProcedures() {
         Iterable<PatientProceduresEntity> patientProcedures = this.patientProceduresService.findAll();
@@ -302,48 +305,88 @@ public class AdminResource {
         RoomListDTO roomListDTO = new RoomListDTO(roomDTOList);
         return new ResponseEntity<>(roomListDTO, HttpStatus.OK);
     }
+
     //DELETE - ALL
     @DeleteMapping("doctor/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable("id") int id) {
-        this.doctorService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.doctorService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("address/{id}")
     public ResponseEntity<Void> deleteAddress(@PathVariable("id") int id) {
-        this.addressService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.addressService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("admin/{id}")
     public ResponseEntity<Void> deleteAdmin(@PathVariable("id") int id) {
-        this.adminService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.adminService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("appointment/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable("id") int id) {
-        this.appointmentService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.appointmentService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("history/{id}")
     public ResponseEntity<Void> deleteHistory(@PathVariable("id") int id) {
-        this.historyService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.historyService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("medication/{id}")
     public ResponseEntity<Void> deleteMedication(@PathVariable("id") int id) {
-        this.medicationService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.medicationService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
     @DeleteMapping("nurse/{id}")
     public ResponseEntity<Void> deleteNurse(@PathVariable("id") int id) {
-        this.nurseService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.nurseService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("oncall/{id}")
     public ResponseEntity<Void> deleteOnCall(@PathVariable("id") int id) {
-        this.onCallService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.onCallService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     //todo
@@ -354,28 +397,54 @@ public class AdminResource {
 //    }
     @DeleteMapping("patient/{id}")
     public ResponseEntity<Void> deletePatient(@PathVariable("id") int id) {
-        this.patientService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.patientService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("person/{id}")
     public ResponseEntity<Void> deletePerson(@PathVariable("id") int id) {
-        this.personService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.personService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
+
     //TODO - delete la prescription nu fuctioneaza PK compusa, trbuie sa dai mai mult de un ID - trebuie modificat si in service si creat metodata DeletBy in repository
     @DeleteMapping("prescription/{id}")
     public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id) {
-        this.prescriptionService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.prescriptionService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
     }
+
     @DeleteMapping("procedures/{id}")
     public ResponseEntity<Void> deleteProcedures(@PathVariable("id") int id) {
-        this.proceduresService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.proceduresService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
     @DeleteMapping("room/{id}")
     public ResponseEntity<Void> deleteRoom(@PathVariable("id") int id) {
-        this.roomService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try {
+            this.roomService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (InexistentResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

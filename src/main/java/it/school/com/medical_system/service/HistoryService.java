@@ -2,6 +2,7 @@ package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.HistoryDTO;
 import it.school.com.medical_system.entities.HistoryEntity;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,8 @@ public class HistoryService {
     public Iterable<HistoryEntity> findAll(){
         return this.historyRepository.findAll();
     }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException{
+        this.historyRepository.findById(id).orElseThrow(() -> new InexistentResourceException("Nurse does not exist"));
         this.historyRepository.deleteById(id);
     }
 

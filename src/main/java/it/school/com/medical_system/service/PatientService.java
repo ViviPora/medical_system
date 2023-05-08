@@ -2,6 +2,7 @@ package it.school.com.medical_system.service;
 import it.school.com.medical_system.dtos.PatientDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.PatientEntity;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.AddressRepository;
 import it.school.com.medical_system.repositories.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,8 @@ public class PatientService {
      public Iterable<PatientEntity> findAll(){
             return this.patientRepository.findAll();
         }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException {
+        this.patientRepository.findById(id).orElseThrow(()-> new InexistentResourceException("this patient does not exist in data base"));
         this.patientRepository.deleteById(id);
     }
 }

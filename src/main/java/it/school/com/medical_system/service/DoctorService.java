@@ -4,6 +4,7 @@ import it.school.com.medical_system.dtos.DoctorDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.entities.PersonEntity;
+import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.AddressRepository;
 import it.school.com.medical_system.repositories.DoctorRepository;
 import it.school.com.medical_system.repositories.PersonRepository;
@@ -47,7 +48,8 @@ public class DoctorService {
     public Iterable<DoctorEntity> findAll(){
         return this.doctorRepository.findAll();
     }
-    public void delete(int id) {
+    public void delete(int id) throws InexistentResourceException{
+        this.doctorRepository.findById(id).orElseThrow(()-> new InexistentResourceException("this doctor does not exist!"));
         this.doctorRepository.deleteById(id);
     }
 
