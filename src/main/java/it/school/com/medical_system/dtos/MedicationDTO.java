@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MedicationDTO {
     private Integer id;
+    @NonNull
     private String name;
+    @NonNull
     private String brand;
     private String description;
 

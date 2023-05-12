@@ -4,6 +4,8 @@ import it.school.com.medical_system.entities.ProceduresEntity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.NotEmpty;
+
 @Slf4j
 @Getter
 @Setter
@@ -11,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Builder
 public class ProceduresDTO {
+
     private int id;
+    @NotEmpty
     private String name;
+    @NotEmpty
     private int cost;
 
     public static ProceduresDTO from(ProceduresEntity proceduresEntity) {

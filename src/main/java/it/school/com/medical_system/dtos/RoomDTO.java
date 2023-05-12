@@ -19,6 +19,7 @@ public class RoomDTO {
     @UniqueElements
     @NotEmpty
     private Integer number;
+    @NotEmpty
     private RoomType roomType;
     private boolean available;
     public static RoomDTO from(RoomEntity roomEntity){

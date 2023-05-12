@@ -17,6 +17,7 @@ public class DoctorEntity extends PersonEntity{
     private String degreeNumber;
 
     private int experience;
+    private String specialization;
 //    @ToString.Exclude
 //    @OneToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "id_person", referencedColumnName = "id")

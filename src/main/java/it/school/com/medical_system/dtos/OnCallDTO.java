@@ -6,17 +6,25 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
 public class OnCallDTO {
     private int id;
+    @NotEmpty
     private String doctorFirstName;
+    @NotEmpty
     private String doctorLastName;
+    @NotEmpty
     private String nurseFirstName;
+    @NotEmpty
     private String nurseLastName;
+    @Future
     private LocalDateTime starOnCall;
+    @Future
     private LocalDateTime endOnCall;
 
     public static OnCallDTO from(OnCallEntity onCallEntity){

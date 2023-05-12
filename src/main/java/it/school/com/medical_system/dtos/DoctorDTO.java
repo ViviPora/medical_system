@@ -29,7 +29,7 @@ public class DoctorDTO {
     @NotEmpty
     @NoDigits(message = "Digits in lastname")
     private String lastName;
-    @NotEmpty
+    //@NotEmpty
     @PastOrPresent
     private LocalDate birtDate;
     @NotEmpty
@@ -38,7 +38,7 @@ public class DoctorDTO {
     @NotEmpty
     @Digits(integer = 10, fraction = 0)
     String phone;
-    @NotEmpty
+   // @NotEmpty
     Gender gender;
     @NotEmpty
     String country;
@@ -50,8 +50,10 @@ public class DoctorDTO {
     String address;
     @NotEmpty
     String degreeNumber;
-    @NotEmpty
+   // @NotEmpty
     Integer experience;
+    @NotEmpty
+    String specialization;
 
     public static DoctorDTO from(DoctorEntity doctorEntity) {
         return DoctorDTO.builder()
@@ -68,6 +70,7 @@ public class DoctorDTO {
                 .address(doctorEntity.getAddress().getAddress())
                 .degreeNumber(doctorEntity.getDegreeNumber())
                 .experience(doctorEntity.getExperience())
+                .specialization(doctorEntity.getSpecialization())
                 .build();
     }
 

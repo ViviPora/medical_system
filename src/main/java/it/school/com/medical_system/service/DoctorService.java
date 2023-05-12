@@ -11,6 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.print.Doc;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 public class DoctorService {
@@ -42,22 +46,45 @@ public class DoctorService {
         doctor.setGender(doctorDTO.getGender());
         doctor.setExperience(doctorDTO.getExperience());
         doctor.setDegreeNumber(doctorDTO.getDegreeNumber());
+        doctor.setSpecialization(doctorDTO.getSpecialization());
         log.info("Saving doctor to the database...");
         DoctorEntity doctorEntity = doctorRepository.save(doctor);
         log.info("Doctor successfully saved");
         return doctorEntity;
     }
 
-    public Iterable<DoctorEntity> findAll(){
+    public Iterable<DoctorEntity> findAll() {
         log.info("Find all doctors");
         return this.doctorRepository.findAll();
     }
-    public void delete(int id) throws InexistentResourceException{
+
+    public void delete(int id) throws InexistentResourceException {
         log.info("Search for the doctor you want to delete by id");
-        this.doctorRepository.findById(id).orElseThrow(()-> new InexistentResourceException("this doctor does not exist!"));
+        this.doctorRepository.findById(id).orElseThrow(() -> new InexistentResourceException("this doctor does not exist!"));
         log.info("The doctor to delete has been found and will be deleted ");
         this.doctorRepository.deleteById(id);
         log.info("The doctor has been successfully deleted");
     }
 
-}
+    //TODO not in postmen
+    //can be improve
+    public List<DoctorEntity> searchByExperienceAndSpecialization(int experience, String specialization) {
+
+       Iterable<DoctorEntity> dbDoctors = this.doctorRepository.findAll();
+       List<DoctorEntity> doctorEntities = new ArrayList<>();
+       for (DoctorEntity doctorEntity : dbDoctors){
+           doctorEntities.add(doctorEntity);
+       }
+       if (experience != 0){
+           List<DoctorEntity> doctorByExperience = this.doctorRepository.findByExperienceGreaterThan(experience);
+           doctorEntities.retainAll(doctorByExperience);
+       }
+       if (specialization!=null && !specialization.isEmpty()){
+           List<DoctorEntity> doctorBySpecialization = this.doctorRepository.findBySpecialization(specialization);
+           doctorEntities.retainAll(doctorBySpecialization);
+       }
+       return doctorEntities;
+       }
+    }
+
+

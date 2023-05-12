@@ -1,4 +1,4 @@
-package it.school.com.medical_system.Responses;
+package it.school.com.medical_system.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

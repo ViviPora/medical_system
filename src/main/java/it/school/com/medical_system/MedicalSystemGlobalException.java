@@ -1,6 +1,6 @@
 package it.school.com.medical_system;
 
-import it.school.com.medical_system.Responses.ErrorResponse;
+import it.school.com.medical_system.responses.ErrorResponse;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

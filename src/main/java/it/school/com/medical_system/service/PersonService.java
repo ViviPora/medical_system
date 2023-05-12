@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class PersonService {
@@ -58,4 +60,14 @@ public class PersonService {
         log.info("The person has been successfully deleted");
     }
 
+    public PersonEntity findById(int id) throws InexistentResourceException{
+        log.info("Search the person by id{}", id);
+        return this.personRepository.findById(id).orElseThrow(()-> new InexistentResourceException("Person does not exist"));
+    }
+ public List<PersonEntity> searchByName(String name){
+        if (name == null || name.isEmpty()){
+            return null;
+        }
+       return this.personRepository.findByLastName(name);
+ }
 }

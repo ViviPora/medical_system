@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class PatientService {
@@ -57,5 +59,9 @@ public class PatientService {
         log.info("The patient to delete has been found and will be deleted ");
         this.patientRepository.deleteById(id);
         log.info("The patient has been successfully deleted");
+    }
+    public Optional<PatientEntity> search(String name, String firstname) throws InexistentResourceException{
+        log.info("Search for the patient name");
+       return this.patientRepository.findByLastNameAndFirstName(name, firstname);
     }
 }
