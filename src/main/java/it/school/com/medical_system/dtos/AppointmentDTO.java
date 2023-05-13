@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -28,9 +29,9 @@ public class AppointmentDTO {
     @Positive
     private Integer roomNo;
     @FutureOrPresent
-    private LocalDate appointmentStart;
+    private LocalDateTime appointmentStart;
     @Future
-    private LocalDate appointmentEnd;
+    private LocalDateTime appointmentEnd;
     public static AppointmentDTO from(AppointmentEntity appointmentEntity){
         return AppointmentDTO.builder()
                 .id(appointmentEntity.getId())

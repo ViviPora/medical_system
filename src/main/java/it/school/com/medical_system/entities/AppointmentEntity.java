@@ -4,6 +4,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @Getter
 @Setter
@@ -32,7 +34,7 @@ public class AppointmentEntity {
     @JoinColumn(name = "id_room", referencedColumnName = "id")
     private RoomEntity room;
     @Column(name = "start_appointment_time")
-    private LocalDate startAppointment;
+    private LocalDateTime startAppointment;
     @Column(name = "end_appointment_time")
-    private LocalDate endAppointment;
+    private LocalDateTime endAppointment;
 }

@@ -7,14 +7,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
 import it.school.com.medical_system.exception.InexistentResourceException;
+import it.school.com.medical_system.schedulers.DailyReportScheduler;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.ArrayList;
@@ -54,13 +57,21 @@ public class AdminResource {
     private OnCallService onCallService;
     @Autowired
     private PatientProceduresService patientProceduresService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private DailyReportScheduler dailyReportScheduler;
+
+
 
     //POST - > ALL
+    @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "Create admin")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PersonDTO.class)))
     @PostMapping("/admin")
-    public ResponseEntity<AdminEntity> create(@Valid @RequestBody AdminEntity admin) {
+    public ResponseEntity<AdminEntity> create(@Valid @RequestBody AdminEntity admin) throws MessagingException {
         log.debug("Create admin");
+        this.emailService.sendEmailWithTemplate("vivipala37@gmail.com", "Test template", "Test test test");
         AdminEntity adminEntity = this.adminService.add(admin);
         return new ResponseEntity<>(adminEntity, HttpStatus.CREATED);
     }
