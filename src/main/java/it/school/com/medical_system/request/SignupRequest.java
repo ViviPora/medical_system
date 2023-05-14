@@ -2,6 +2,7 @@ package it.school.com.medical_system.request;
 
 import it.school.com.medical_system.entities.RoleEntity;
 import it.school.com.medical_system.entities.UserEntity;
+import it.school.com.medical_system.validators.Password;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +22,7 @@ public class SignupRequest {
     private String lastName;
 
     private String username;
-
+    @Password
     private String password;
 
     private int age;

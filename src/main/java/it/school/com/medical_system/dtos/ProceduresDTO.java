@@ -17,7 +17,7 @@ public class ProceduresDTO {
     private int id;
     @NotEmpty
     private String name;
-    @NotEmpty
+
     private int cost;
 
     public static ProceduresDTO from(ProceduresEntity proceduresEntity) {

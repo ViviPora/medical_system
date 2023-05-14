@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +24,14 @@ public class NurseDTO { private Integer id;
     private String firstName;
     @NotEmpty
     private String lastName;
-    @NotEmpty
+    @NotNull
     private LocalDate birtDate;
     @NotEmpty
     @Email
     String email;
     @NotEmpty
     String phone;
-    @NotEmpty
+
     Gender gender;
     @NotEmpty
     String country;
@@ -42,7 +43,7 @@ public class NurseDTO { private Integer id;
     String address;
     @NotEmpty
     String degreeNumber;
-    @NotEmpty
+    @NotNull
     Integer experience;
     public static NurseDTO from(NurseEntity nurseEntity) {
         return NurseDTO.builder()

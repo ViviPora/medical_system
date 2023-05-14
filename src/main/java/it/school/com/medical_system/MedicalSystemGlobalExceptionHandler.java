@@ -1,5 +1,6 @@
 package it.school.com.medical_system;
 
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.responses.ErrorResponse;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,14 @@ public class MedicalSystemGlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyExistsException(AlreadyExistsException ex){
+
+        ErrorResponse errorResponse = new ErrorResponse(LocalDateTime.now(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex){

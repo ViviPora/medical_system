@@ -23,14 +23,14 @@ public class PatientDTO {
     private String firstName;
     @NotEmpty
     private String lastName;
-    @NotEmpty
+
     private LocalDate birtDate;
     @NotEmpty
     @Email
     String email;
     @NotEmpty
     String phone;
-    @NotEmpty
+
     Gender gender;
     @NotEmpty
     String country;
@@ -44,7 +44,7 @@ public class PatientDTO {
     String insuranceNumber;
     @NotEmpty
     String insuranceCompany;
-    @NotEmpty
+
     LocalDate enrollmentDate;
 
 

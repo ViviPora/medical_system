@@ -4,14 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import it.school.com.medical_system.dtos.MedicationDTO;
-import it.school.com.medical_system.dtos.MedicationListDTO;
-import it.school.com.medical_system.dtos.PatientProceduresDTO;
-import it.school.com.medical_system.dtos.PrescriptionDTO;
+import it.school.com.medical_system.dtos.*;
+import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.entities.MedicationEntity;
 import it.school.com.medical_system.entities.PatientProceduresEntity;
 import it.school.com.medical_system.entities.PrescriptionEntity;
 import it.school.com.medical_system.exception.InexistentResourceException;
+import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/doctor")
 @Slf4j
 @Validated
 public class DoctorResource {
@@ -36,16 +35,20 @@ public class DoctorResource {
     private PrescriptionService prescriptionService;
     @Autowired
     private PatientProceduresService patientProceduresService;
+    @Autowired
+    private DoctorService doctorService;
 
     @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "Create prescription")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PrescriptionDTO.class)))
     @PostMapping("/prescription")
-    public ResponseEntity<PrescriptionDTO> create(@Valid @RequestBody PrescriptionDTO prescriptionDTO) {
+    public ResponseEntity<PrescriptionDTO> create(@Valid @RequestBody PrescriptionDTO prescriptionDTO) throws InexistentResourceException {
         log.debug("Create prescription");
         PrescriptionEntity prescriptionEntity = this.prescriptionService.add(prescriptionDTO);
         return new ResponseEntity<>(prescriptionDTO.from(prescriptionEntity), HttpStatus.CREATED);
     }
+
+
 
     @PreAuthorize("hasRole('DOCTOR') or hasRole('NURSE')")
     @Operation(summary = "Create patient procedures")
@@ -75,5 +78,16 @@ public class DoctorResource {
         }
         MedicationListDTO medicationListDTO = new MedicationListDTO(medicationDTOList);
         return new ResponseEntity<>(medicationListDTO, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+    @Operation(summary = "Edit doctor")
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = DoctorDTO.class)))
+    @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
+    @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = Void.class)))
+    @PatchMapping("/updateDoctor/{id}")
+    public ResponseEntity<DoctorDTO> updateDoctorPartial(@PathVariable("id") int id, @RequestBody DoctorDTO doctorDTO) throws InexistentResourceException, NotEditableException {
+        DoctorEntity doctorEntity = this.doctorService.updatePartial(id, doctorDTO);
+        DoctorDTO responseDTO = DoctorDTO.from(doctorEntity);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

@@ -20,7 +20,6 @@ public class AdminService {
         admin.setFirstName(adminEntity.getFirstName());
         admin.setLastName(adminEntity.getLastName());
         admin.setEmail(adminEntity.getEmail());
-        admin.setPassword(adminEntity.getPassword());
         admin.setCode(adminEntity.getCode());
         log.info("Saving admin to database");
         adminRepository.save(admin);

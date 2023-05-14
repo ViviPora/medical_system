@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.service.*;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/nurse")
 @Slf4j
 @Validated
 public class NurseResource {
@@ -38,19 +39,13 @@ public class NurseResource {
     @Autowired
     private HistoryService historyService;
     @Autowired
-    private PrescriptionService prescriptionService;
-    @Autowired
     private AppointmentService appointmentService;
     @Autowired
     private PersonService personService;
-    @Autowired
-    private AddressService addressService;
+
     @Autowired
     private HistoryPatientService historyPatientService;
-    @Autowired
-    private OnCallService onCallService;
-    @Autowired
-    private PatientProceduresService patientProceduresService;
+
 
     @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
     @Operation(summary = "Search person by lastname")
@@ -61,8 +56,6 @@ public class NurseResource {
         List<PersonDTO> personDTOList = PersonDTO.from(entityList);
         return new ResponseEntity<>(new PersonListDTO(personDTOList), HttpStatus.OK);
     }
-
-    //todo not in postman
     @PreAuthorize("hasRole('NURSE') or hasRole('DOCTOR') or hasRole('ADMIN')")
     @Operation(summary = "Search patient by first name and lastname")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
@@ -106,7 +99,7 @@ public class NurseResource {
     @Operation(summary = "Create history")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = HistoryDTO.class)))
     @PostMapping("/history")
-    public ResponseEntity<HistoryDTO> create(@Valid @RequestBody HistoryDTO historyDTO) {
+    public ResponseEntity<HistoryDTO> create(@Valid @RequestBody HistoryDTO historyDTO) throws AlreadyExistsException {
         log.debug("create history");
         HistoryEntity historyEntity = this.historyService.add(historyDTO);
         return new ResponseEntity<>(historyDTO.from(historyEntity), HttpStatus.CREATED);

@@ -2,6 +2,7 @@ package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.AppointmentDTO;
 import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.*;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,9 @@ public class AppointmentService {
     @Autowired
     RoomRepository roomRepository;
 
-    //todo findbyLastNameAndFirstName -> unique?
-    public AppointmentEntity add(AppointmentDTO appointmentDTO) {
+
+    public AppointmentEntity add(AppointmentDTO appointmentDTO) throws AlreadyExistsException {
+
         log.info("Add new appointment");
         AppointmentEntity appointmentEntity = new AppointmentEntity();
         appointmentEntity.setDoctor(doctorRepository.findByLastName(appointmentDTO.getDoctorName()));
@@ -41,7 +43,9 @@ public class AppointmentService {
         log.info("Appointment successfully saved");
 
         return appointment;
+
     }
+
 
     public Iterable<AppointmentEntity> findAll() {
         log.info("Find all appointments");

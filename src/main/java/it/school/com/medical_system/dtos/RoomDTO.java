@@ -16,10 +16,7 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 public class RoomDTO {
     private Integer id;
-    @UniqueElements
-    @NotEmpty
     private Integer number;
-    @NotEmpty
     private RoomType roomType;
     private boolean available;
     public static RoomDTO from(RoomEntity roomEntity){

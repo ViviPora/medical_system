@@ -3,6 +3,7 @@ package it.school.com.medical_system.service;
 import it.school.com.medical_system.dtos.NurseDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.NurseEntity;
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.repositories.AddressRepository;
@@ -23,7 +24,8 @@ public class NurseService {
     private NurseRepository nurseRepository;
 
     @Transactional
-    public NurseEntity add(NurseDTO nurseDTO) {
+    public NurseEntity add(NurseDTO nurseDTO) throws AlreadyExistsException {
+        if (!nurseRepository.existsByLastNameAndFirstName(nurseDTO.getLastName(),nurseDTO.getFirstName())){
         log.info("Add new address");
         AddressEntity address = new AddressEntity();
         address.setCountry(nurseDTO.getCountry());
@@ -35,6 +37,7 @@ public class NurseService {
         log.info("Address successfully saved");
         log.info("Add new nurse");
         NurseEntity nurse = new NurseEntity();
+        nurse.setId(nurseDTO.getId());
         nurse.setFirstName(nurseDTO.getFirstName());
         nurse.setLastName(nurseDTO.getLastName());
         nurse.setBirthDate(nurseDTO.getBirtDate());
@@ -48,6 +51,7 @@ public class NurseService {
         NurseEntity nurseEntity = nurseRepository.save(nurse);
         log.info("Nurse successfully saved");
         return nurseEntity;
+    }else throw new AlreadyExistsException("This nurse already exist in the database!");
     }
        public Iterable<NurseEntity> findAll(){
            log.info("Find all nurses"); return this.nurseRepository.findAll();
@@ -64,7 +68,7 @@ public class NurseService {
         Optional<NurseEntity> optionalNurse = this.nurseRepository.findById(id);
         Optional<AddressEntity> optionalAddress =  this.nurseRepository.findAddress(id);
         if (!optionalNurse.isPresent()) {
-            throw new InexistentResourceException("Student does not exists");
+            throw new InexistentResourceException("Nurse does not exists");
         }
         NurseEntity nurse = optionalNurse.get();
         AddressEntity address = optionalAddress.get();

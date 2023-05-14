@@ -11,6 +11,7 @@ import it.school.com.medical_system.dtos.PatientDTO;
 import it.school.com.medical_system.entities.AppointmentEntity;
 import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.entities.PatientEntity;
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.service.*;
@@ -41,45 +42,23 @@ public class PatientResource {
     @Autowired
     private EmailService emailService;
 
+    @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
     @Operation(summary = "Create patient")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
     @PostMapping("/patient")
-    @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
-    public ResponseEntity<PatientDTO> create(@Valid @RequestBody PatientDTO patientDTO) {
+    public ResponseEntity<PatientDTO> create(@Valid @RequestBody PatientDTO patientDTO) throws AlreadyExistsException {
         log.debug("Create patient");
         PatientEntity patientEntity = this.patientService.add(patientDTO);
         return new ResponseEntity<>(PatientDTO.from(patientEntity), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Search doctor by experience and specialization")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = DoctorListDTO.class)))
-    @GetMapping("/searchDocByExpAndSpec")
-    public ResponseEntity<DoctorListDTO> searchDoctor(@RequestParam(value = "experience", required = false) int experience,
-                                                      @RequestParam(value = "specialization", required = false) String specialization) {
-        List<DoctorEntity> entityList = this.doctorService.searchByExperienceAndSpecialization(experience, specialization);
-        List<DoctorDTO> doctorDTOList = DoctorDTO.from(entityList);
-        return new ResponseEntity<>(new DoctorListDTO(doctorDTOList), HttpStatus.OK);
-    }
-
-    @Operation(summary = "Get all doctors")
-    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = DoctorListDTO.class)))
-    @GetMapping("/doctors")
-    public ResponseEntity<DoctorListDTO> getAllDoctor() {
-        Iterable<DoctorEntity> doctors = this.doctorService.findAll();
-        List<DoctorDTO> doctorDTOList = new ArrayList<>();
-        for (DoctorEntity doctorEntity : doctors) {
-            doctorDTOList.add(DoctorDTO.from(doctorEntity));
-        }
-        DoctorListDTO doctorListDTO = new DoctorListDTO(doctorDTOList);
-        return new ResponseEntity<>(doctorListDTO, HttpStatus.OK);
-    }
 
     @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
     @Operation(summary = "Create appointment")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AppointmentDTO.class)))
     @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content(schema = @Schema(implementation = AppointmentDTO.class)))
     @PostMapping("/appointment")
-    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO appointmentDTO) throws MessagingException {
+    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO appointmentDTO) throws MessagingException, AlreadyExistsException {
         log.debug("Create appointment");
         AppointmentEntity appointmentEntity = this.appointmentService.add(appointmentDTO);
         log.trace("Sending email");

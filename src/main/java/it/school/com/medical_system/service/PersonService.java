@@ -35,6 +35,7 @@ public class PersonService {
         log.info("Add new person");
         PersonEntity personEntity = new PersonEntity();
         personEntity.setFirstName(person.getFirstName());
+        personEntity.setId(person.getId());
         personEntity.setLastName(person.getLastName());
         personEntity.setEmail(person.getEmail());
         personEntity.setGender(person.getGender());

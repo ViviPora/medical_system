@@ -76,6 +76,7 @@ public class AuthenticationController {
         user.setUsername(signupRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
         user.setAge(signupRequest.getAge());
+        user.setActive(signupRequest.isActive());
         Set<String> signupRequestRole = signupRequest.getRole();
         Set<RoleEntity> roles = new HashSet<>();
         if (signupRequestRole == null) {

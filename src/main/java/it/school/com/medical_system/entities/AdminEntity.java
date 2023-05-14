@@ -20,6 +20,5 @@ public class AdminEntity {
     @Column(name = "last_name")
     private String lastName;
     private String email;
-    private String password;
     private String code;
 }

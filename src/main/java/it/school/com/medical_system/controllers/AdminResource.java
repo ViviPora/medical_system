@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
+import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -62,11 +63,11 @@ public class AdminResource {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create admin")
-    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PersonDTO.class)))
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AdminEntity.class)))
     @PostMapping("/admin")
     public ResponseEntity<AdminEntity> create(@Valid @RequestBody AdminEntity admin) throws MessagingException {
         log.debug("Create admin");
-        this.emailService.sendEmailWithTemplate("vivipala37@gmail.com", "Test template", "Test test test");
+        this.emailService.sendEmail(admin.getEmail(), "Confirmation email", "You are not in database, please sing-up");
         AdminEntity adminEntity = this.adminService.add(admin);
         return new ResponseEntity<>(adminEntity, HttpStatus.CREATED);
     }
@@ -86,7 +87,7 @@ public class AdminResource {
     @Operation(summary = "Create doctor")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = DoctorDTO.class)))
     @PostMapping("/doctor")
-    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody DoctorDTO doctorDTO) {
+    public ResponseEntity<DoctorDTO> create(@Valid @RequestBody DoctorDTO doctorDTO) throws AlreadyExistsException {
         log.debug("Create doctor");
         DoctorEntity doctorEntity = this.doctorService.add(doctorDTO);
         return new ResponseEntity<>(DoctorDTO.from(doctorEntity), HttpStatus.CREATED);
@@ -96,7 +97,7 @@ public class AdminResource {
     @Operation(summary = "Create nurse")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = NurseDTO.class)))
     @PostMapping("/nurse")
-    public ResponseEntity<NurseDTO> create(@Valid @RequestBody NurseDTO nurseDTO) {
+    public ResponseEntity<NurseDTO> create(@Valid @RequestBody NurseDTO nurseDTO) throws AlreadyExistsException {
         log.debug("Create nurse");
         NurseEntity nurseEntity = this.nurseService.add(nurseDTO);
         return new ResponseEntity<>(NurseDTO.from(nurseEntity), HttpStatus.CREATED);
@@ -255,7 +256,15 @@ public class AdminResource {
         PrescriptionListDTO prescriptionListDTO = new PrescriptionListDTO(prescriptionDTOList);
         return new ResponseEntity<>(prescriptionListDTO, HttpStatus.OK);
     }
-
+    @Operation(summary = "Search doctor by experience and specialization")
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = DoctorListDTO.class)))
+    @GetMapping("/searchDocByExpAndSpec")
+    public ResponseEntity<DoctorListDTO> searchDoctor(@RequestParam(value = "experience", required = false) int experience,
+                                                      @RequestParam(value = "specialization", required = false) String specialization) {
+        List<DoctorEntity> entityList = this.doctorService.searchByExperienceAndSpecialization(experience, specialization);
+        List<DoctorDTO> doctorDTOList = DoctorDTO.from(entityList);
+        return new ResponseEntity<>(new DoctorListDTO(doctorDTOList), HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all procedures")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = ProceduresDTO.class)))
@@ -449,11 +458,11 @@ public class AdminResource {
 
     //TODO - delete la prescription nu fuctioneaza PK compusa, trbuie sa dai mai mult de un ID - trebuie modificat si in service si creat metodata DeletBy in repository
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("prescription/{id}")
-    public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id) {
+    @DeleteMapping("prescription/{id}/{id2}/")
+    public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id,@PathVariable ("id2")int id2) {
         log.info("Delete prescription");
         try {
-            this.prescriptionService.delete(id);
+            this.prescriptionService.delete(id,id2);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (InexistentResourceException e) {
             log.warn("Inexistent resource exception {}", e.getMessage());
@@ -483,5 +492,17 @@ public class AdminResource {
         this.roomService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
+    }
+    @Operation(summary = "Get all doctors")
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = DoctorListDTO.class)))
+    @GetMapping("/doctors")
+    public ResponseEntity<DoctorListDTO> getAllDoctor() {
+        Iterable<DoctorEntity> doctors = this.doctorService.findAll();
+        List<DoctorDTO> doctorDTOList = new ArrayList<>();
+        for (DoctorEntity doctorEntity : doctors) {
+            doctorDTOList.add(DoctorDTO.from(doctorEntity));
+        }
+        DoctorListDTO doctorListDTO = new DoctorListDTO(doctorDTOList);
+        return new ResponseEntity<>(doctorListDTO, HttpStatus.OK);
     }
 }

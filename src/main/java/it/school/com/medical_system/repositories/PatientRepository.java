@@ -12,6 +12,7 @@ public interface PatientRepository extends CrudRepository<PatientEntity, Integer
     PatientEntity findByLastName(String lastname);
 
     Optional<PatientEntity> findByLastNameAndFirstName(String lastName, String firstName);
+    boolean existsByLastNameAndFirstName(String lastName, String firstName);
 
     @Query("SELECT p.address FROM PersonEntity p WHERE p.id=:id")
     Optional<AddressEntity> findAddress(int id);

@@ -13,7 +13,8 @@ public interface NurseRepository extends CrudRepository<NurseEntity, Integer> {
     NurseEntity findByLastName(String lastname);
 
     Optional<NurseEntity> findByLastNameAndFirstName(String lastName, String firstName);
+    boolean existsByLastNameAndFirstName(String lastName, String firstName);
 
-    @Query("SELECT p.address FROM NurseEntity n WHERE n.id=:id")
+    @Query("SELECT n.address FROM NurseEntity n WHERE n.id=:id")
     Optional<AddressEntity> findAddress(int id);
 }

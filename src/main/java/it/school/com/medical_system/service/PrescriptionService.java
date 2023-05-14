@@ -1,9 +1,7 @@
 package it.school.com.medical_system.service;
 
 import it.school.com.medical_system.dtos.PrescriptionDTO;
-import it.school.com.medical_system.entities.DoctorEntity;
-import it.school.com.medical_system.entities.PrescriptionEntity;
-import it.school.com.medical_system.entities.PrescriptionPK;
+import it.school.com.medical_system.entities.*;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.repositories.DoctorRepository;
 import it.school.com.medical_system.repositories.MedicationRepository;
@@ -11,6 +9,8 @@ import it.school.com.medical_system.repositories.PatientRepository;
 import it.school.com.medical_system.repositories.PrescriptionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class PrescriptionService {
@@ -23,19 +23,27 @@ public class PrescriptionService {
     @Autowired
     PatientRepository patientRepository;
 
-    //ToDO - trebuie sa introduci in PatientDTO nume, prenume -acum e cu ID si trebuie refacut si service
     //TODO log for prescription
-    //TODO if you don t have time delete this-> DELETE prescription
-    public PrescriptionEntity add(PrescriptionDTO prescriptionDTO) {
+
+    public PrescriptionEntity add(PrescriptionDTO prescriptionDTO) throws InexistentResourceException {
         PrescriptionEntity prescriptionEntity = new PrescriptionEntity();
-        PrescriptionPK prescriptionPK = new PrescriptionPK(prescriptionDTO.getIdPatient(), prescriptionDTO.getIdMedication());
+        Optional<DoctorEntity> doctor = this.doctorRepository.findByLastNameAndFirstName(prescriptionDTO.getDoctorLastname(), prescriptionDTO.getDoctorFirstname());
+        Optional<PatientEntity> patient = this.patientRepository.findByLastNameAndFirstName(prescriptionDTO.getPatientLastname(), prescriptionDTO.getPatientFirstname());
+        Optional<MedicationEntity> medication = this.medicationRepository.findByName(prescriptionDTO.getMedicationName());
+        if (!doctor.isPresent()) {
+            throw new InexistentResourceException("Doctor not found!");
+        }
+        if (!patient.isPresent()) {
+            throw new InexistentResourceException("Patient not found!");
+        }
+        if (!medication.isPresent()) {
+            throw new InexistentResourceException("Medication not found!");
+        }
+        PrescriptionPK prescriptionPK = new PrescriptionPK(doctor.get().getId(), medication.get().getId());
         prescriptionEntity.setPrescriptionPK(prescriptionPK);
-        //todo exception -> no content
-        prescriptionEntity.setPatientEntity(patientRepository.findById(prescriptionDTO.getIdPatient()).get());
-        prescriptionEntity.setMedicationEntity(medicationRepository.findById(prescriptionDTO.getIdMedication()).get());
-        DoctorEntity doctorEntity = doctorRepository.findById(prescriptionDTO.getIdDoctor()).get();
-        prescriptionEntity.setDoctorId(doctorEntity);
-        System.out.println(prescriptionEntity);
+        prescriptionEntity.setPatientEntity(patient.get());
+        prescriptionEntity.setMedicationEntity(medication.get());
+        prescriptionEntity.setDoctorId(doctor.get());
         return prescriptionRepository.save(prescriptionEntity);
     }
 
@@ -43,9 +51,11 @@ public class PrescriptionService {
         return this.prescriptionRepository.findAll();
     }
 
-    public void delete(int id) throws InexistentResourceException {
-        this.prescriptionRepository.findById(id).orElseThrow(() -> new InexistentResourceException("This prescription does not exist"));
+    public void delete(int id, int id2) throws InexistentResourceException {
+        Optional<PrescriptionEntity> prescriptionEntity = Optional.ofNullable(this.prescriptionRepository.findByPatientEntityAndMedicationEntity(patientRepository.findById(id), medicationRepository.findById(id2)));
+        if (!prescriptionEntity.isPresent()) {
+            throw new InexistentResourceException("This prescription does not exist");
+        }
         this.prescriptionRepository.deleteById(id);
-
     }
 }
