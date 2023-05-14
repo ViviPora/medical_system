@@ -4,6 +4,7 @@ import it.school.com.medical_system.dtos.NurseDTO;
 import it.school.com.medical_system.entities.AddressEntity;
 import it.school.com.medical_system.entities.NurseEntity;
 import it.school.com.medical_system.exception.InexistentResourceException;
+import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.repositories.AddressRepository;
 import it.school.com.medical_system.repositories.NurseRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -57,4 +59,39 @@ public class NurseService {
         this.nurseRepository.deleteById(id);
         log.info("The nurse has been successfully deleted");
     }
+
+    public NurseEntity updatePartial(int id, NurseDTO nurseDTO) throws InexistentResourceException, NotEditableException {
+        Optional<NurseEntity> optionalNurse = this.nurseRepository.findById(id);
+        Optional<AddressEntity> optionalAddress =  this.nurseRepository.findAddress(id);
+        if (!optionalNurse.isPresent()) {
+            throw new InexistentResourceException("Student does not exists");
+        }
+        NurseEntity nurse = optionalNurse.get();
+        AddressEntity address = optionalAddress.get();
+        if (nurseDTO.getFirstName() != null || nurseDTO.getLastName() != null || nurseDTO.getBirtDate() != null || nurseDTO.getGender() != null || nurseDTO.getDegreeNumber() != null || nurseDTO.getExperience() != null) {
+            throw new NotEditableException("You can modify just phone, email, address");
+        }
+        if (nurseDTO.getPhone() != null) {
+            nurse.setPhone(nurseDTO.getPhone());
+        }
+        if (nurseDTO.getEmail() != null) {
+            nurse.setEmail(nurseDTO.getEmail());
+        }
+        if (nurseDTO.getCountry() != null) {
+            address.setCountry(nurseDTO.getCountry());
+        }
+        if (nurseDTO.getCity() != null) {
+            address.setCity(nurseDTO.getCity());
+        }
+        if (nurseDTO.getStreet() != null) {
+            address.setStreet(nurseDTO.getStreet());
+        }
+        if (nurseDTO.getAddress() != null) {
+            address.setAddress(nurseDTO.getAddress());
+        }
+        nurse.setAddress(address);
+        this.nurseRepository.save(nurse);
+        return nurse;
+    }
 }
+

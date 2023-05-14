@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
 import it.school.com.medical_system.exception.InexistentResourceException;
+import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +25,6 @@ import java.util.List;
 @Slf4j
 @Validated
 public class NurseResource {
-    @Autowired
-    private AdminService adminService;
-    @Autowired
-    private DoctorService doctorService;
     @Autowired
     private PatientService patientService;
     @Autowired
@@ -54,7 +52,8 @@ public class NurseResource {
     @Autowired
     private PatientProceduresService patientProceduresService;
 
-    @Operation(summary = "Search person")
+    @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
+    @Operation(summary = "Search person by lastname")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PersonListDTO.class)))
     @GetMapping("/searchPerson")
     public ResponseEntity<PersonListDTO> searchPerson(@RequestParam("name") String name) {
@@ -64,16 +63,18 @@ public class NurseResource {
     }
 
     //todo not in postman
-    @Operation(summary = "Search patient")
+    @PreAuthorize("hasRole('NURSE') or hasRole('DOCTOR') or hasRole('ADMIN')")
+    @Operation(summary = "Search patient by first name and lastname")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = PatientEntity.class)))
     @GetMapping("/searchPatient")
-    public ResponseEntity<PatientDTO> searchPatient(@RequestParam("name") String name,@RequestParam("firstname") String firstname) throws InexistentResourceException {
+    public ResponseEntity<PatientDTO> searchPatient(@RequestParam("name") String name, @RequestParam("firstname") String firstname) throws InexistentResourceException {
         log.debug("search patient");
         PatientEntity entity = this.patientService.search(name, firstname).get();
         return new ResponseEntity<>(PatientDTO.from(entity), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
     @Operation(summary = "Create room")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = RoomDTO.class)))
     @PostMapping("/room")
@@ -82,7 +83,7 @@ public class NurseResource {
         RoomEntity roomEntity = this.roomService.add(roomDTO);
         return new ResponseEntity<>(RoomDTO.from(roomEntity), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
     @Operation(summary = "Create procedures")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = ProceduresDTO.class)))
     @PostMapping("/procedures")
@@ -91,7 +92,7 @@ public class NurseResource {
         ProceduresEntity proceduresEntity = this.proceduresService.add(proceduresDTO);
         return new ResponseEntity<>(proceduresDTO.from(proceduresEntity), HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
     @Operation(summary = "Create medication")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = MedicationDTO.class)))
     @PostMapping("/medication")
@@ -101,7 +102,7 @@ public class NurseResource {
         return new ResponseEntity<>(medicationDTO.from(medicationEntity), HttpStatus.CREATED);
 
     }
-
+    @PreAuthorize("hasRole('NURSE')")
     @Operation(summary = "Create history")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = HistoryDTO.class)))
     @PostMapping("/history")
@@ -111,16 +112,7 @@ public class NurseResource {
         return new ResponseEntity<>(historyDTO.from(historyEntity), HttpStatus.CREATED);
 
     }
-
-    @Operation(summary = "Create appointment")
-    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AppointmentDTO.class)))
-    @PostMapping("/appointment")
-    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO appointmentDTO) {
-        log.debug("Create appointment");
-        AppointmentEntity appointmentEntity = this.appointmentService.add(appointmentDTO);
-        return new ResponseEntity<>(appointmentDTO.from(appointmentEntity), HttpStatus.CREATED);
-    }
-
+    @PreAuthorize("hasRole('NURSE') or hasRole('DOCTOR')")
     @Operation(summary = "Create history patient")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = HistoryPatientDTO.class)))
     @PostMapping("/histoypatient")
@@ -130,7 +122,7 @@ public class NurseResource {
         return new ResponseEntity<>(historyPatientDTO, HttpStatus.CREATED);
 
     }
-
+    @PreAuthorize("hasRole('NURSE') or hasRole('DOCTOR') or hasRole('ADMIN')")
     @Operation(summary = "Delete appointment by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -144,5 +136,16 @@ public class NurseResource {
             log.warn("Inexistent resource exception {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @PreAuthorize("hasRole('NURSE') or hasRole('ADMIN')")
+    @Operation(summary = "Edit nurse")
+    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = NurseDTO.class)))
+    @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
+    @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = Void.class)))
+    @PatchMapping("/updateNurse/{id}")
+    public ResponseEntity<NurseDTO> updateNursePartial(@PathVariable("id") int id, @RequestBody NurseDTO nurseDTO) throws NotEditableException, InexistentResourceException {
+        NurseEntity nurseEntity = this.nurseService.updatePartial(id, nurseDTO);
+        NurseDTO responseDTO = NurseDTO.from(nurseEntity);
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 }

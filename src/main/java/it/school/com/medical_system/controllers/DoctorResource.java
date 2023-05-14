@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,36 +31,13 @@ import java.util.List;
 @Validated
 public class DoctorResource {
     @Autowired
-    private AdminService adminService;
-    @Autowired
-    private DoctorService doctorService;
-    @Autowired
-    private PatientService patientService;
-    @Autowired
-    private NurseService nurseService;
-    @Autowired
-    private RoomService roomService;
-    @Autowired
-    private ProceduresService proceduresService;
-    @Autowired
     private MedicationService medicationService;
-    @Autowired
-    private HistoryService historyService;
     @Autowired
     private PrescriptionService prescriptionService;
     @Autowired
-    private AppointmentService appointmentService;
-    @Autowired
-    private PersonService personService;
-    @Autowired
-    private AddressService addressService;
-    @Autowired
-    private HistoryPatientService historyPatientService;
-    @Autowired
-    private OnCallService onCallService;
-    @Autowired
     private PatientProceduresService patientProceduresService;
 
+    @PreAuthorize("hasRole('DOCTOR')")
     @Operation(summary = "Create prescription")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PrescriptionDTO.class)))
     @PostMapping("/prescription")
@@ -69,6 +47,7 @@ public class DoctorResource {
         return new ResponseEntity<>(prescriptionDTO.from(prescriptionEntity), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('NURSE')")
     @Operation(summary = "Create patient procedures")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PatientProceduresDTO.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -82,9 +61,9 @@ public class DoctorResource {
             log.warn("Inexistent resource exception: {}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('NURSE')")
     @Operation(summary = "Get medication")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = MedicationListDTO.class)))
     @GetMapping("/medication")

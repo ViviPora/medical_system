@@ -1,5 +1,6 @@
 package it.school.com.medical_system.entities;
 
+import it.school.com.medical_system.validators.Password;
 import lombok.*;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class UserEntity {
     private String lastName;
 
     private String username;
-
+    @Password
     private String password;
 
     private int age;

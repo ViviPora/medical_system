@@ -7,11 +7,12 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AppointmentRepository extends CrudRepository<AppointmentEntity,Integer> {
     AppointmentEntity deleteByStartAppointmentAndEndAppointmentAndDoctor(LocalDate appointmentStart, LocalDate appointmentEnd, DoctorEntity doctor);
-    @Query("SELECT a FROM AppointmentEntity a WHERE a.doctor.id=:idDoctor")
-    List<AppointmentEntity> appointmentList(@Param("idDoctor") int idDoctor);
+    @Query("SELECT a FROM AppointmentEntity a WHERE a.doctor.id=:idDoctor and a.startAppointment>=:todayAppointments and a.startAppointment<=:tomorrowAppointment")
+    List<AppointmentEntity> appointmentList(@Param("idDoctor") int idDoctor, LocalDateTime todayAppointments, LocalDateTime tomorrowAppointment);
 
 }

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import it.school.com.medical_system.dtos.*;
 import it.school.com.medical_system.entities.*;
 import it.school.com.medical_system.exception.InexistentResourceException;
-import it.school.com.medical_system.schedulers.DailyReportScheduler;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -59,13 +57,10 @@ public class AdminResource {
     private PatientProceduresService patientProceduresService;
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private DailyReportScheduler dailyReportScheduler;
-
-
 
     //POST - > ALL
-    @PreAuthorize("hasRole('DOCTOR')")
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create admin")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PersonDTO.class)))
     @PostMapping("/admin")
@@ -76,6 +71,7 @@ public class AdminResource {
         return new ResponseEntity<>(adminEntity, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create person")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PersonDTO.class)))
     @PostMapping("/person")
@@ -86,6 +82,7 @@ public class AdminResource {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create doctor")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = DoctorDTO.class)))
     @PostMapping("/doctor")
@@ -95,15 +92,7 @@ public class AdminResource {
         return new ResponseEntity<>(DoctorDTO.from(doctorEntity), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Create patient")
-    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
-    @PostMapping("/patient")
-    public ResponseEntity<PatientDTO> create(@Valid @RequestBody PatientDTO patientDTO) {
-        log.debug("Create patient");
-        PatientEntity patientEntity = this.patientService.add(patientDTO);
-        return new ResponseEntity<>(PatientDTO.from(patientEntity), HttpStatus.CREATED);
-    }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create nurse")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = NurseDTO.class)))
     @PostMapping("/nurse")
@@ -113,7 +102,7 @@ public class AdminResource {
         return new ResponseEntity<>(NurseDTO.from(nurseEntity), HttpStatus.CREATED);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create address")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AddressDTO.class)))
     @PostMapping("/address")
@@ -123,7 +112,7 @@ public class AdminResource {
         return new ResponseEntity<>(addressDTO.from(addressEntity), HttpStatus.CREATED);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create on call")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = OnCallDTO.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -140,7 +129,7 @@ public class AdminResource {
     }
 
     //GET - ALL
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all patients")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientListDTO.class)))
     @GetMapping("/patient")
@@ -154,6 +143,7 @@ public class AdminResource {
         return new ResponseEntity<>(patientListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all addresses")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = AddressListDTO.class)))
     @GetMapping("/addresses")
@@ -167,6 +157,7 @@ public class AdminResource {
         return new ResponseEntity<>(addressListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all appointments")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = AppointmentListDTO.class)))
     @GetMapping("/appointments")
@@ -180,6 +171,7 @@ public class AdminResource {
         return new ResponseEntity<>(appointmentListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get history")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = HistoryListDTO.class)))
     @GetMapping("/history")
@@ -194,7 +186,7 @@ public class AdminResource {
     }
 
     //toDO historyPATIENT
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all nurses")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = NurseListDTO.class)))
     @GetMapping("/nurse")
@@ -208,6 +200,7 @@ public class AdminResource {
         return new ResponseEntity<>(nurseListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all on calls")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = OnCallListDTO.class)))
     @GetMapping("/oncall")
@@ -221,6 +214,7 @@ public class AdminResource {
         return new ResponseEntity<>(onCallListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all patient procedures")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientProceduresListDTO.class)))
     @GetMapping("/patientprocedures")
@@ -234,6 +228,7 @@ public class AdminResource {
         return new ResponseEntity<>(patientProceduresListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all persons")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PersonListDTO.class)))
     @GetMapping("/person")
@@ -247,6 +242,7 @@ public class AdminResource {
         return new ResponseEntity<>(personListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all prescriptions")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PrescriptionListDTO.class)))
     @GetMapping("/prescription")
@@ -260,6 +256,7 @@ public class AdminResource {
         return new ResponseEntity<>(prescriptionListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all procedures")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = ProceduresDTO.class)))
     @GetMapping("/procedures")
@@ -273,6 +270,7 @@ public class AdminResource {
         return new ResponseEntity<>(proceduresListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all rooms")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = RoomDTO.class)))
     @GetMapping("/room")
@@ -286,6 +284,7 @@ public class AdminResource {
         return new ResponseEntity<>(roomListDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get person by ID")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PersonDTO.class)))
     @GetMapping("/person/{id}")
@@ -296,6 +295,7 @@ public class AdminResource {
     }
 
     //DELETE - ALL
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete doctor by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -311,6 +311,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete address by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -326,6 +327,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete admin by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -341,6 +343,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete history by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -356,6 +359,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete medication by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -372,6 +376,7 @@ public class AdminResource {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete nurse by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -387,6 +392,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete on call by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -408,6 +414,7 @@ public class AdminResource {
 //        this.patientProceduresService.delete(id);
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete patient by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -423,6 +430,7 @@ public class AdminResource {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete person by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -440,6 +448,7 @@ public class AdminResource {
     }
 
     //TODO - delete la prescription nu fuctioneaza PK compusa, trbuie sa dai mai mult de un ID - trebuie modificat si in service si creat metodata DeletBy in repository
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("prescription/{id}")
     public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id) {
         log.info("Delete prescription");
@@ -453,6 +462,7 @@ public class AdminResource {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete procedure by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -463,7 +473,7 @@ public class AdminResource {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Delete room by ID")
     @ApiResponse(responseCode = "204", description = "OK", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
@@ -474,6 +484,4 @@ public class AdminResource {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
-
-
 }
