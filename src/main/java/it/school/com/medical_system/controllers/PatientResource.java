@@ -13,6 +13,7 @@ import it.school.com.medical_system.entities.DoctorEntity;
 import it.school.com.medical_system.entities.PatientEntity;
 import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
+import it.school.com.medical_system.exception.NotAvailableException;
 import it.school.com.medical_system.exception.NotEditableException;
 import it.school.com.medical_system.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -58,9 +59,10 @@ public class PatientResource {
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AppointmentDTO.class)))
     @ApiResponse(responseCode = "500", description = "INTERNAL_SERVER_ERROR", content = @Content(schema = @Schema(implementation = AppointmentDTO.class)))
     @PostMapping("/appointment")
-    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO appointmentDTO) throws MessagingException, AlreadyExistsException {
+    public ResponseEntity<AppointmentDTO> create(@Valid @RequestBody AppointmentDTO appointmentDTO) throws MessagingException, AlreadyExistsException, NotAvailableException, InexistentResourceException {
         log.debug("Create appointment");
         AppointmentEntity appointmentEntity = this.appointmentService.add(appointmentDTO);
+        appointmentService.alreadyExistsAppointment(appointmentDTO);
         log.trace("Sending email");
         this.emailService.sendEmail(appointmentEntity.getPatient().getEmail(), "Your appointment has been registered!",
                 "This email is the confirmation of your appointment in the clinic");

@@ -65,13 +65,16 @@ public class NurseService {
     }
 
     public NurseEntity updatePartial(int id, NurseDTO nurseDTO) throws InexistentResourceException, NotEditableException {
+        log.info("Update nurse by id");
         Optional<NurseEntity> optionalNurse = this.nurseRepository.findById(id);
         Optional<AddressEntity> optionalAddress =  this.nurseRepository.findAddress(id);
         if (!optionalNurse.isPresent()) {
+            log.warn("Nurse does not exists");
             throw new InexistentResourceException("Nurse does not exists");
         }
         NurseEntity nurse = optionalNurse.get();
         AddressEntity address = optionalAddress.get();
+        log.info("Check DTO for updating nurse by id");
         if (nurseDTO.getFirstName() != null || nurseDTO.getLastName() != null || nurseDTO.getBirtDate() != null || nurseDTO.getGender() != null || nurseDTO.getDegreeNumber() != null || nurseDTO.getExperience() != null) {
             throw new NotEditableException("You can modify just phone, email, address");
         }
@@ -94,6 +97,7 @@ public class NurseService {
             address.setAddress(nurseDTO.getAddress());
         }
         nurse.setAddress(address);
+        log.info("Nurse updated");
         this.nurseRepository.save(nurse);
         return nurse;
     }

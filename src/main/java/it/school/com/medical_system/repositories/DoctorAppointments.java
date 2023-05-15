@@ -2,5 +2,5 @@
 //
 //public class DoctorAppointments {
 //    private String name;
-//    private Long count;
+//
 //}

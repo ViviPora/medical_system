@@ -34,16 +34,19 @@ public class PatientProceduresService {
         Optional<DoctorEntity> doctorOptional = doctorRepository.findByLastNameAndFirstName(patientProceduresDTO.getDoctorLastName(), patientProceduresDTO.getDoctorFirstName());
         log.info("Search for procedure");
         if (!proceduresOptional.isPresent()) {
+            log.warn("This procedure does not exist!");
             throw new InexistentResourceException("This procedure does not exist!", patientProceduresDTO.getProcedureName());
         }
         log.info("Procedure exist");
         log.info("Search for patient");
         if (!patientOptional.isPresent()) {
+            log.warn("This patient does not exist!");
             throw new InexistentResourceException("This patient does not exist!", patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName());
         }
         log.info("Patient exist");
         log.info("Search for doctor");
         if (!doctorOptional.isPresent()) {
+            log.warn("This doctor does not exist!");
             throw new InexistentResourceException("This doctor does not exist!", patientProceduresDTO.getPatientLastName(), patientProceduresDTO.getPatientFirstName());
         }
         log.info("Patient exist");

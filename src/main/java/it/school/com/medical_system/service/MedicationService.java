@@ -23,11 +23,13 @@ public class MedicationService {
         log.info("Saving medication to database");
         return medicationRepository.save(medicationEntity);
     }
-       public Iterable<MedicationEntity> findAll(){
-           log.info("Find all medications");
-           return this.medicationRepository.findAll();
-            }
-    public void delete(int id) throws InexistentResourceException{
+
+    public Iterable<MedicationEntity> findAll() {
+        log.info("Find all medications");
+        return this.medicationRepository.findAll();
+    }
+
+    public void delete(int id) throws InexistentResourceException {
         log.info("Search for the medication you want to delete by id");
         this.medicationRepository.findById(id).orElseThrow(() -> new InexistentResourceException("This medication does not exist"));
         log.info("The medication to delete has been found and will be deleted ");

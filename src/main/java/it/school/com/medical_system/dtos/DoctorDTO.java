@@ -38,7 +38,6 @@ public class DoctorDTO {
     @NotEmpty
     @Digits(integer = 10, fraction = 0)
     String phone;
-   // @NotEmpty
     Gender gender;
     @NotEmpty
     String country;
@@ -50,7 +49,6 @@ public class DoctorDTO {
     String address;
     @NotEmpty
     String degreeNumber;
-   // @NotEmpty
     Integer experience;
     @NotEmpty
     String specialization;

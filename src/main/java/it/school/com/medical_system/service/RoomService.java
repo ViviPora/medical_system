@@ -19,7 +19,7 @@ public class RoomService {
         RoomEntity roomEntity = new RoomEntity();
         roomEntity.setRoomNumber(roomDTO.getNumber());
         roomEntity.setRoomType(roomDTO.getRoomType());
-        roomEntity.setAvailable(roomDTO.isAvailable());
+        roomEntity.setAvailable(true);
         log.info("Saving room to database");
         RoomEntity room = roomRepository.save(roomEntity);
         log.info("Room successfully saved");

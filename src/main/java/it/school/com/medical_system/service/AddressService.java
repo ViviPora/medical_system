@@ -18,15 +18,12 @@ public class AddressService {
 
     @Transactional
     public AddressEntity add(AddressDTO addressDTO) {
-
         log.info("Add new address");
-
         AddressEntity addressEntity = new AddressEntity();
         addressEntity.setCountry(addressDTO.getCountry());
         addressEntity.setCity(addressDTO.getCity());
         addressEntity.setStreet(addressDTO.getStreet());
         addressEntity.setAddress(addressDTO.getAddress());
-
         log.info("Saving address to database");
         AddressEntity address = addressRepository.save(addressEntity);
         log.info("Address successfully saved");
@@ -46,5 +43,4 @@ public class AddressService {
         this.addressRepository.deleteById(id);
         log.info("The address has been successfully deleted");
     }
-
 }

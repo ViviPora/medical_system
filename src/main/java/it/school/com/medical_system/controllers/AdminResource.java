@@ -118,16 +118,13 @@ public class AdminResource {
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = OnCallDTO.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
     @PostMapping("/oncall")
-    public ResponseEntity<OnCallDTO> create(@Valid @RequestBody OnCallDTO onCallDTO) {
+    public ResponseEntity<OnCallDTO> create(@Valid @RequestBody OnCallDTO onCallDTO) throws MessagingException, InexistentResourceException {
         log.debug("Create on call");
-        try {
             OnCallEntity onCallEntity = this.onCallService.add(onCallDTO);
             return new ResponseEntity<>(onCallDTO.from(onCallEntity), HttpStatus.CREATED);
-        } catch (InexistentResourceException e) {
-            log.warn("Inexistent resource exception: {}", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         }
-    }
+
 
     //GET - ALL
     @PreAuthorize("hasRole('ADMIN')")

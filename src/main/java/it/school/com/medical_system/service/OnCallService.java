@@ -11,7 +11,9 @@ import it.school.com.medical_system.repositories.OnCallRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.util.Optional;
 
 @Service
@@ -23,8 +25,11 @@ public class OnCallService {
     DoctorRepository doctorRepository;
     @Autowired
     NurseRepository nurseRepository;
+    @Autowired
+    EmailService emailService;
 
-    public OnCallEntity add(OnCallDTO onCallDTO) throws InexistentResourceException {
+    @Transactional
+    public OnCallEntity add(OnCallDTO onCallDTO) throws InexistentResourceException, MessagingException {
         log.info("Add new on call");
         OnCallEntity onCallEntity = new OnCallEntity();
         log.info("Search for the doctor");
@@ -50,6 +55,9 @@ public class OnCallService {
         onCallEntity.setStarOnCall(onCallDTO.getStarOnCall());
         onCallEntity.setEndOnCall(onCallDTO.getEndOnCall());
         log.info("On call successfully added");
+        log.info("sending emails...");
+        this.emailService.sendEmail(doctor.getEmail(), "On call", "The following on call service for you has been added, check the application for details");
+        this.emailService.sendEmail(nurse.getEmail(), "On call", "The following on call service for you has been added, check the application for details");
         OnCallEntity onCall = onCallRepository.save(onCallEntity);
         log.info("On call has been successfully saved");
         return onCall;

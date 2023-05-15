@@ -21,9 +21,6 @@ public class HistoryPatientService {
     @Autowired
     HistoryRepository historyRepository;
 
-    //todo Inexitent Resource Exception
-    //todo Optional
-    //todo delete - findbyid
     @Transactional
     public void addHistory(HistoryPatientDTO historyPatientDTO) throws InexistentResourceException {
         log.info("Add new patient history");

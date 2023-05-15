@@ -54,26 +54,4 @@ public class EmailService {
 
     }
 
-
-    public void sendEmailWithTemplate(String to, String subject, String message) throws MessagingException {
-
-
-        Context context = new Context();
-        context.setVariable("title", "my title");
-        context.setVariable("message", "my message");
-
-        String htmlContent = templateEngine.process("email-template.html", context);
-
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(htmlContent, true);
-
-        javaMailSender.send(mimeMessage);
-
-
-    }
 }

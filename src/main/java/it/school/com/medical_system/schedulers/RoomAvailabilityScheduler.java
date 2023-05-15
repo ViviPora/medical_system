@@ -22,17 +22,16 @@ public class RoomAvailabilityScheduler {
     @Autowired
     RoomRepository roomRepository;
 
-    @Scheduled(fixedRate = 1000000)
+    @Scheduled(fixedRate = 10000)
     public void roomAvailability() {
 
         Iterable<AppointmentEntity> appointmentEntities = this.appointmentService.findAll();
         Iterable<RoomEntity> roomEntities = this.roomService.findAll();
         for (AppointmentEntity appointment : appointmentEntities)
             for (RoomEntity room : roomEntities) {
-                if (appointment.getRoom() == room) {
-                    System.out.println(appointment.getStartAppointment().isAfter(LocalDateTime.now().minusMinutes(30)));
-                    System.out.println(appointment.getEndAppointment().isBefore(LocalDateTime.now().plusMinutes(30)));
-                    room.setAvailable(false);
+               if(room.getRoomNumber() == appointment.getRoom().getRoomNumber() && LocalDateTime.now().isAfter(appointment.getStartAppointment()) && LocalDateTime.now().isBefore(appointment.getEndAppointment())) {
+                        room.setAvailable(false);
+
                 } else {
                     room.setAvailable(true);
                 }

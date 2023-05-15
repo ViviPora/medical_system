@@ -23,35 +23,36 @@ public class PatientService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Transactional
     public PatientEntity add(PatientDTO patientDTO) throws AlreadyExistsException {
-        if (!this.patientRepository.existsByLastNameAndFirstName(patientDTO.getLastName(), patientDTO.getFirstName())){
-        log.info("Add new address");
-        AddressEntity address = new AddressEntity();
-        address.setCountry(patientDTO.getCountry());
-        address.setCity(patientDTO.getCity());
-        address.setStreet(patientDTO.getStreet());
-        address.setAddress(patientDTO.getAddress());
-        log.info("Saving address to database");
-        AddressEntity addressEntity = addressRepository.save(address);
-        log.info("Address successfully saved");
-        log.info("Add new patient");
-        PatientEntity patient = new PatientEntity();
-        patient.setId(patientDTO.getId());
-        patient.setFirstName(patientDTO.getFirstName());
-        patient.setLastName(patientDTO.getLastName());
-        patient.setEmail(patientDTO.getEmail());
-        patient.setGender(patientDTO.getGender());
-        patient.setBirthDate(patientDTO.getBirtDate());
-        patient.setPhone(patientDTO.getPhone());
-        patient.setAddress(addressEntity);
-        patient.setEnrollmentDate(patientDTO.getEnrollmentDate());
-        patient.setInsuranceNumber(patientDTO.getInsuranceNumber());
-        patient.setInsuranceCompany(patientDTO.getInsuranceCompany());
-        log.info("Saving patient to database");
-        PatientEntity patientEntity = patientRepository.save(patient);
-        log.info("Patient successfully saved");
-        return patientEntity;
-    }else throw new AlreadyExistsException("Patient already exists in data base!");
+        if (!this.patientRepository.existsByLastNameAndFirstName(patientDTO.getLastName(), patientDTO.getFirstName())) {
+            log.info("Add new address");
+            AddressEntity address = new AddressEntity();
+            address.setCountry(patientDTO.getCountry());
+            address.setCity(patientDTO.getCity());
+            address.setStreet(patientDTO.getStreet());
+            address.setAddress(patientDTO.getAddress());
+            log.info("Saving address to database");
+            AddressEntity addressEntity = addressRepository.save(address);
+            log.info("Address successfully saved");
+            log.info("Add new patient");
+            PatientEntity patient = new PatientEntity();
+            patient.setId(patientDTO.getId());
+            patient.setFirstName(patientDTO.getFirstName());
+            patient.setLastName(patientDTO.getLastName());
+            patient.setEmail(patientDTO.getEmail());
+            patient.setGender(patientDTO.getGender());
+            patient.setBirthDate(patientDTO.getBirtDate());
+            patient.setPhone(patientDTO.getPhone());
+            patient.setAddress(addressEntity);
+            patient.setEnrollmentDate(patientDTO.getEnrollmentDate());
+            patient.setInsuranceNumber(patientDTO.getInsuranceNumber());
+            patient.setInsuranceCompany(patientDTO.getInsuranceCompany());
+            log.info("Saving patient to database");
+            PatientEntity patientEntity = patientRepository.save(patient);
+            log.info("Patient successfully saved");
+            return patientEntity;
+        } else throw new AlreadyExistsException("Patient already exists in data base!");
     }
 
     public Iterable<PatientEntity> findAll() {

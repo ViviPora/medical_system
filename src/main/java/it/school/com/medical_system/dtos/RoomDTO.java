@@ -18,13 +18,12 @@ public class RoomDTO {
     private Integer id;
     private Integer number;
     private RoomType roomType;
-    private boolean available;
+
     public static RoomDTO from(RoomEntity roomEntity){
         return RoomDTO.builder()
                 .id(roomEntity.getId())
                 .number(roomEntity.getRoomNumber())
                 .roomType(roomEntity.getRoomType())
-                .available(roomEntity.isAvailable())
                 .build();
     }
 }

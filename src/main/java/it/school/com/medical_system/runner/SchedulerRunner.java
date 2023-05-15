@@ -18,7 +18,7 @@ public class SchedulerRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        roomAvailabilityScheduler.roomAvailability();
+//        roomAvailabilityScheduler.roomAvailability();
 //        dailyReportScheduler.sendReportToDoctor();
 //        emailScheduler.remainderAppointment();
 

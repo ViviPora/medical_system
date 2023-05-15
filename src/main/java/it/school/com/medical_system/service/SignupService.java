@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 public class SignupService {
     @Autowired
     UserRepository userRepository;
-
-
     public UserEntity add(SignupRequest signupRequest){
         UserEntity userEntity = new UserEntity();
         userEntity.setFirstName(signupRequest.getFirstName());
