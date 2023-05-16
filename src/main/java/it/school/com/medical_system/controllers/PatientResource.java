@@ -4,13 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import it.school.com.medical_system.dtos.AppointmentDTO;
-import it.school.com.medical_system.dtos.DoctorDTO;
-import it.school.com.medical_system.dtos.DoctorListDTO;
-import it.school.com.medical_system.dtos.PatientDTO;
-import it.school.com.medical_system.entities.AppointmentEntity;
-import it.school.com.medical_system.entities.DoctorEntity;
-import it.school.com.medical_system.entities.PatientEntity;
+import it.school.com.medical_system.dtos.*;
+import it.school.com.medical_system.entities.*;
 import it.school.com.medical_system.exception.AlreadyExistsException;
 import it.school.com.medical_system.exception.InexistentResourceException;
 import it.school.com.medical_system.exception.NotAvailableException;
@@ -35,13 +30,15 @@ import java.util.List;
 @Validated
 public class PatientResource {
     @Autowired
-    private DoctorService doctorService;
+    private PatientProceduresService patientProceduresService;
     @Autowired
     private PatientService patientService;
     @Autowired
     private AppointmentService appointmentService;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private HistoryService historyService;
 
     @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
     @Operation(summary = "Create patient")
@@ -72,7 +69,7 @@ public class PatientResource {
 
     @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
     @Operation(summary = "Edit patient")
-    @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientDTO.class)))
     @ApiResponse(responseCode = "404", description = "NOT_FOUND", content = @Content(schema = @Schema(implementation = Void.class)))
     @ApiResponse(responseCode = "400", description = "BAD_REQUEST", content = @Content(schema = @Schema(implementation = Void.class)))
     @PatchMapping("/updatePatient/{id}")
@@ -80,5 +77,33 @@ public class PatientResource {
         PatientEntity patientEntity = this.patientService.updatePartial(id, patientDTO);
         PatientDTO responseDTO = PatientDTO.from(patientEntity);
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+    //TODO Verifica functionalitatea in postman
+    @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
+    @GetMapping("/appointment/{id}")
+    @Operation(summary = "Get patient by id")
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = AppointmentListDTO.class)))
+    public ResponseEntity<AppointmentListDTO> getAllAppointmentsById(@PathVariable("id") int id){
+        Iterable<AppointmentEntity> appointments = this.appointmentService.findByPatientId(id);
+        List<AppointmentDTO> appointmentDTOList =  new ArrayList<>();
+        for (AppointmentEntity appointment: appointments){
+            appointmentDTOList.add(AppointmentDTO.from(appointment));
+        }
+        AppointmentListDTO appointmentsList =  new AppointmentListDTO(appointmentDTOList);
+        return new ResponseEntity<>(appointmentsList, HttpStatus.OK);
+    }
+    //TODO Verifica functionalitatea in postman
+    @PreAuthorize("hasRole('PATIENT') or hasRole('NURSE') or hasRole('DOCTOR')")
+    @Operation(summary = "Get patient procedures by id")
+    @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = PatientProceduresListDTO.class)))
+    @GetMapping("/procedures/{id}")
+    public ResponseEntity<PatientProceduresListDTO> getAllProceduresById(@PathVariable ("id") int id){
+        Iterable<PatientProceduresEntity> patientProceduresEntities = this.patientProceduresService.findByPatientId(id);
+        List<PatientProceduresDTO> patientProceduresDTOList = new ArrayList<>();
+        for (PatientProceduresEntity patientProcedures : patientProceduresEntities){
+            patientProceduresDTOList.add(PatientProceduresDTO.from(patientProcedures));
+        }
+        PatientProceduresListDTO proceduresListDTO = new PatientProceduresListDTO(patientProceduresDTOList);
+        return new ResponseEntity<>(proceduresListDTO, HttpStatus.OK);
     }
 }

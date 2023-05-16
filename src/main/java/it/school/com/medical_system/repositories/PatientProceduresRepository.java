@@ -6,4 +6,5 @@ import it.school.com.medical_system.entities.PatientProceduresPK;
 import org.springframework.data.repository.CrudRepository;
 
 public interface PatientProceduresRepository extends CrudRepository<PatientProceduresEntity, PatientProceduresPK> {
+    Iterable<PatientProceduresEntity> findByPatientId(int id);
 }

@@ -59,8 +59,6 @@ public class AdminResource {
     @Autowired
     private EmailService emailService;
 
-    //POST - > ALL
-
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Create admin")
     @ApiResponse(responseCode = "201", description = "CREATED", content = @Content(schema = @Schema(implementation = AdminEntity.class)))
@@ -453,7 +451,6 @@ public class AdminResource {
 
     }
 
-    //TODO - delete la prescription nu fuctioneaza PK compusa, trbuie sa dai mai mult de un ID - trebuie modificat si in service si creat metodata DeletBy in repository
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("prescription/{id}/{id2}/")
     public ResponseEntity<Void> deletePrescription(@PathVariable("id") int id,@PathVariable ("id2")int id2) {
@@ -488,8 +485,8 @@ public class AdminResource {
         log.info("Delete room");
         this.roomService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Get all doctors")
     @ApiResponse(responseCode = "200", description = "OK", content = @Content(schema = @Schema(implementation = DoctorListDTO.class)))
     @GetMapping("/doctors")

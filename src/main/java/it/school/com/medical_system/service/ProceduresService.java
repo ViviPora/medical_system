@@ -34,7 +34,10 @@ public class ProceduresService {
         log.info("The procedure to delete has been found and will be deleted ");
         this.proceduresRepository.deleteById(id);
         log.info("The procedure has been successfully deleted");
+
     }
+
+
 }
 
 

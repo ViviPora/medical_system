@@ -1,5 +1,6 @@
 package it.school.com.medical_system.dtos;
 
+import it.school.com.medical_system.entities.HistoryPatientEntity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.UniqueElements;
@@ -21,5 +22,6 @@ public class HistoryPatientDTO {
     @NotEmpty
     String firstName;
     String medicalHistory;
+
 }
 

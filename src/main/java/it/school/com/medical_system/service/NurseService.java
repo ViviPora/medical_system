@@ -32,10 +32,10 @@ public class NurseService {
         address.setCity(nurseDTO.getCity());
         address.setStreet(nurseDTO.getStreet());
         address.setAddress(nurseDTO.getAddress());
-        log.info("Saving address to database");
+        log.trace("Saving address to database");
         AddressEntity addressEntity = addressRepository.save(address);
-        log.info("Address successfully saved");
-        log.info("Add new nurse");
+        log.trace("Address successfully saved");
+        log.trace("Add new nurse");
         NurseEntity nurse = new NurseEntity();
         nurse.setId(nurseDTO.getId());
         nurse.setFirstName(nurseDTO.getFirstName());
@@ -47,7 +47,7 @@ public class NurseService {
         nurse.setGender(nurseDTO.getGender());
         nurse.setExperience(nurseDTO.getExperience());
         nurse.setDegreeNumber(nurseDTO.getDegreeNumber());
-        log.info("Saving nurse to database");
+        log.trace("Saving nurse to database");
         NurseEntity nurseEntity = nurseRepository.save(nurse);
         log.info("Nurse successfully saved");
         return nurseEntity;
@@ -59,7 +59,7 @@ public class NurseService {
     public void delete(int id) throws InexistentResourceException{
         log.info("Search for the nurse you want to delete by id");
         this.nurseRepository.findById(id).orElseThrow(() -> new InexistentResourceException("Nurse does not exist"));
-        log.info("The nurse to delete has been found and will be deleted ");
+        log.trace("The nurse to delete has been found and will be deleted ");
         this.nurseRepository.deleteById(id);
         log.info("The nurse has been successfully deleted");
     }
@@ -74,7 +74,7 @@ public class NurseService {
         }
         NurseEntity nurse = optionalNurse.get();
         AddressEntity address = optionalAddress.get();
-        log.info("Check DTO for updating nurse by id");
+        log.trace("Check DTO for updating nurse by id");
         if (nurseDTO.getFirstName() != null || nurseDTO.getLastName() != null || nurseDTO.getBirtDate() != null || nurseDTO.getGender() != null || nurseDTO.getDegreeNumber() != null || nurseDTO.getExperience() != null) {
             throw new NotEditableException("You can modify just phone, email, address");
         }

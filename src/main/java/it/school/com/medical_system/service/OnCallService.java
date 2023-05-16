@@ -32,24 +32,24 @@ public class OnCallService {
     public OnCallEntity add(OnCallDTO onCallDTO) throws InexistentResourceException, MessagingException {
         log.info("Add new on call");
         OnCallEntity onCallEntity = new OnCallEntity();
-        log.info("Search for the doctor");
+        log.trace("Search for the doctor");
         Optional<DoctorEntity> doctorOptional =
                 doctorRepository.findByLastNameAndFirstName(onCallDTO.getDoctorLastName(), onCallDTO.getDoctorFirstName());
         if (!doctorOptional.isPresent()) {
             throw new InexistentResourceException("This doctor does not exist!", onCallDTO.getDoctorLastName(), onCallDTO.getDoctorFirstName());
         }
-        log.info("Doctor found");
-        log.info("Search for the nurse");
+        log.trace("Doctor found");
+        log.trace("Search for the nurse");
         Optional<NurseEntity> nurseOptional =
                 nurseRepository.findByLastNameAndFirstName(onCallDTO.getNurseLastName(), onCallDTO.getNurseFirstName());
         if (!nurseOptional.isPresent()) {
             throw new InexistentResourceException("This nurse does not exist!", onCallDTO.getNurseLastName(), onCallDTO.getNurseFirstName());
         }
-        log.info("Nurse found");
-        log.info("Get doctor and nurse");
+        log.trace("Nurse found");
+        log.trace("Get doctor and nurse");
         NurseEntity nurse = nurseOptional.get();
         DoctorEntity doctor = doctorOptional.get();
-        log.info("Adding doctor and nurse");
+        log.trace("Adding doctor and nurse");
         onCallEntity.setDoctor(doctor);
         onCallEntity.setNurse(nurse);
         onCallEntity.setStarOnCall(onCallDTO.getStarOnCall());
@@ -59,7 +59,7 @@ public class OnCallService {
         this.emailService.sendEmail(doctor.getEmail(), "On call", "The following on call service for you has been added, check the application for details");
         this.emailService.sendEmail(nurse.getEmail(), "On call", "The following on call service for you has been added, check the application for details");
         OnCallEntity onCall = onCallRepository.save(onCallEntity);
-        log.info("On call has been successfully saved");
+        log.trace("On call has been successfully saved");
         return onCall;
     }
 

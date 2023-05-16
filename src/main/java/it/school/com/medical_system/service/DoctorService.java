@@ -76,18 +76,24 @@ public class DoctorService {
     }
 
     public List<DoctorEntity> searchByExperienceAndSpecialization(int experience, String specialization) {
-
+        log.info("Search for doctors ");
         Iterable<DoctorEntity> dbDoctors = this.doctorRepository.findAll();
         List<DoctorEntity> doctorEntities = new ArrayList<>();
         for (DoctorEntity doctorEntity : dbDoctors) {
+            log.trace("Add doctors to list");
             doctorEntities.add(doctorEntity);
         }
         if (experience != 0) {
+            log.trace("Experience>0");
             List<DoctorEntity> doctorByExperience = this.doctorRepository.findByExperienceGreaterThan(experience);
+            log.trace("Retain doctors");
             doctorEntities.retainAll(doctorByExperience);
+
         }
         if (specialization != null && !specialization.isEmpty()) {
+            log.trace("specialization>0");
             List<DoctorEntity> doctorBySpecialization = this.doctorRepository.findBySpecialization(specialization);
+            log.trace("Retain doctors");
             doctorEntities.retainAll(doctorBySpecialization);
         }
         return doctorEntities;
@@ -97,11 +103,13 @@ public class DoctorService {
         Optional<DoctorEntity> optionalDoctor = this.doctorRepository.findById(id);
         Optional<AddressEntity> optionalAddress = this.doctorRepository.findAddress(id);
         if (!optionalDoctor.isPresent()) {
+            log.warn("Doctor does not exists");
             throw new InexistentResourceException("Doctor does not exists");
         }
         DoctorEntity doctor = optionalDoctor.get();
         AddressEntity address = optionalAddress.get();
         if (doctorDTO.getFirstName() != null || doctorDTO.getLastName() != null || doctorDTO.getBirtDate() != null || doctorDTO.getGender() != null || doctorDTO.getDegreeNumber() != null || doctorDTO.getExperience() != null) {
+            log.warn("You can modify just phone, email, address");
             throw new NotEditableException("You can modify just phone, email, address");
         }
         if (doctorDTO.getPhone() != null) {
@@ -126,5 +134,4 @@ public class DoctorService {
         this.doctorRepository.save(doctor);
         return doctor;
     }
-
 }

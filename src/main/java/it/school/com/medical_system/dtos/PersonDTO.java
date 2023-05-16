@@ -23,14 +23,14 @@ public class PersonDTO {
     private String firstName;
     @NotEmpty
     private String lastName;
-    @NotEmpty
+
     private LocalDate birtDate;
     @NotEmpty
     @Email
     String email;
     @NotEmpty
     String phone;
-    @NotEmpty
+
     Gender gender;
     @NotEmpty
     String country;

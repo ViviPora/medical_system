@@ -48,9 +48,6 @@ public class HistoryPatientService {
         log.info("The patient history has been successfully added");
     }
 
-    //TODO nu cred ca e OK
-    // todo - > cred ca trebuie un historyPatient repository
-    //todo nu e finalizat delete-ul -> ai nevoie de exceptie si nu e corect ca tu cauti doar history  nu history patient
     public Iterable<HistoryEntity> findAll() {
         log.info("find all patient history");
         return this.historyRepository.findAll();

@@ -31,9 +31,10 @@ public class ReportScheduler {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
-
-    @Scheduled(fixedRate = 1000000)
+//  @Scheduled(fixedRate = 1000000)
+    @Scheduled(cron = "0 0 8 * * *")
     public void sendReportToDoctor() throws MessagingException {
+        log.info("Send raport to doctors");
         log.trace("Fetching all doctors...");
         Iterable<DoctorEntity> doctorEntityList = this.doctorRepository.findAll();
         log.trace("Doctors fetched successfully.");

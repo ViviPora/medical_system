@@ -74,8 +74,8 @@ public class PatientProceduresService {
         return this.patientProceduresRepository.findAll();
     }
 
-    //TODO -> PK -> vezi dupa ce dai parametru dai delete
-//    public void delete(int id) {
-//        this.patientProceduresRepository.deleteById(id);
-//    }
+    public Iterable<PatientProceduresEntity> findByPatientId(int id){
+        log.info("find patient by id");
+        return this.patientProceduresRepository.findByPatientId(id);
+    }
 }

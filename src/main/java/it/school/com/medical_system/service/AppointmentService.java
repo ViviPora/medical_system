@@ -37,7 +37,7 @@ public class AppointmentService {
             log.info("Check if doctor or nurse is available for that moment");
 
             Optional<DoctorEntity> doctor =
-                    doctorRepository.findByLastNameAndFirstName(appointmentDTO.getDoctorLastname(), appointmentDTO.getDoctorLastname());
+                    doctorRepository.findByLastNameAndFirstName(appointmentDTO.getDoctorLastname(), appointmentDTO.getDoctorFirstname());
             if (!doctor.isPresent()) {
                 throw new InexistentResourceException("Doctor not found");
             }
@@ -49,7 +49,7 @@ public class AppointmentService {
 
             Optional<NurseEntity> nurse =
                     nurseRepository.findByLastNameAndFirstName(appointmentDTO.getNurseLastname(), appointmentDTO.getNurseFirstname());
-            if (nurse.isPresent()) {
+            if (!nurse.isPresent()) {
                 throw new InexistentResourceException("Nurse not found!");
             }
             appointmentEntity.setDoctor(doctor.get());
@@ -72,6 +72,11 @@ public class AppointmentService {
         return this.appointmentRepository.findAll();
     }
 
+    public Iterable<AppointmentEntity> findByPatientId(int id) {
+        log.info("Find by patient id");
+        return this.appointmentRepository.findByPatientId(id);
+    }
+
     public void delete(int id) throws InexistentResourceException {
         log.info("Search for the appointment you want to delete by id");
         this.appointmentRepository.findById(id).orElseThrow(() -> new InexistentResourceException("This appointment does not exist! "));
@@ -81,26 +86,24 @@ public class AppointmentService {
     }
 
     public boolean alreadyExistsAppointment(AppointmentDTO appointmentDTO) {
-        boolean existsDoc = true;
-        boolean existsNurse = true;
+        boolean existsDoc = false;
+        boolean existsNurse = false;
         log.info("Check if doctor or nurse is available for that moment");
         Iterable<AppointmentEntity> appointmentEntities = this.appointmentRepository.findAll();
         for (AppointmentEntity appointment : appointmentEntities) {
-            existsDoc = true;
-            existsNurse = true;
             if (appointment.getDoctor().getLastName().equals(appointmentDTO.getDoctorLastname())) {
                 if (appointment.getEndAppointment().isBefore(appointmentDTO.getAppointmentStart()) ||
                         appointment.getStartAppointment().isAfter(appointmentDTO.getAppointmentEnd())) {
                     existsDoc = false;
                     log.trace("Doctor available");
-                }
+                }else {existsDoc = true;}
             }
             if (appointment.getNurse().getLastName().equals(appointmentDTO.getNurseLastname())) {
                 if (appointment.getEndAppointment().isBefore(appointmentDTO.getAppointmentStart()) ||
                         appointment.getStartAppointment().isAfter(appointmentDTO.getAppointmentEnd())) {
                     existsNurse = false;
                     log.trace("Nurse available");
-                }
+                }else {  existsNurse = true;}
             }
         }
         return existsNurse || existsDoc;

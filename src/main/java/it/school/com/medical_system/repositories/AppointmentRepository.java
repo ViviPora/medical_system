@@ -15,4 +15,5 @@ public interface AppointmentRepository extends CrudRepository<AppointmentEntity,
     @Query("SELECT a FROM AppointmentEntity a WHERE a.doctor.id=:idDoctor and a.startAppointment>=:todayAppointments and a.startAppointment<=:tomorrowAppointment")
     List<AppointmentEntity> appointmentList(@Param("idDoctor") int idDoctor, LocalDateTime todayAppointments, LocalDateTime tomorrowAppointment);
 
+    List<AppointmentEntity> findByPatientId(int id);
 }
