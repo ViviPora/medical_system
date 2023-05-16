@@ -18,7 +18,8 @@ public class EmailScheduler {
     EmailService emailService;
     @Autowired
     AppointmentRepository appointmentRepository;
-    @Scheduled(fixedRate = 100000000)
+    //@Scheduled(fixedRate = 100000000)
+    @Scheduled(cron = "0 0 8 * * *")
     public void remainderAppointment() throws MessagingException {
         log.trace("Fetching all appointments...");
         Iterable<AppointmentEntity>  appointmentEntities = this.appointmentRepository.findAll();
